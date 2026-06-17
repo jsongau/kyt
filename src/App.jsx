@@ -15,27 +15,40 @@ import {
 } from './data.js'
 
 const SECTIONS = [
-  { id: 'pipeline',    label: 'Pipeline',        num: '01' },
-  { id: 'zocdoc',     label: 'Zocdoc Intake',    num: '02' },
-  { id: 'intake',     label: 'Intake Form',      num: '03' },
-  { id: 'eligibility',label: 'Eligibility',      num: '04' },
-  { id: 'status',     label: 'Status System',    num: '05' },
-  { id: 'window',     label: '24-Hour Window',   num: '06' },
-  { id: 'scripts',    label: 'Scripts',          num: '07' },
-  { id: 'financial',  label: 'Financial Paths',  num: '08' },
-  { id: 'checkout',   label: 'Checkout',         num: '09' },
-  { id: 'membership', label: 'Membership',       num: '10' },
-  { id: 'billing',    label: 'Billing',          num: '11' },
-  { id: 'scenarios',  label: 'Scenarios',        num: '12' },
-  { id: 'quiz',       label: 'Quiz',             num: '13' },
-  { id: 'glossary',   label: 'Glossary',         num: '14' },
-  { id: 'policy',     label: 'Manager Policy',   num: '15' },
-  { id: 'ppo',        label: 'PPO Plans',        num: '16' },
-  { id: 'ppoquiz',    label: 'PPO Quiz',         num: '17' },
-  { id: 'kytos',      label: 'KYT OS Guide',     num: '18' },
+  // ── NEW PATIENT INTAKE ──────────────────────────────────────────────────
+  { id: 'pipeline',    label: 'Pipeline',        num: '01', group: 'New Patient Intake' },
+  { id: 'zocdoc',     label: 'Zocdoc Intake',    num: '02', group: 'New Patient Intake' },
+  { id: 'intake',     label: 'Intake Form',      num: '03', group: 'New Patient Intake' },
+  { id: 'kytos',      label: 'KYT OS Guide',     num: '18', group: 'New Patient Intake' },
+  // ── ELIGIBILITY ─────────────────────────────────────────────────────────
+  { id: 'eligibility',label: 'Eligibility',      num: '04', group: 'Eligibility' },
+  { id: 'status',     label: 'Status System',    num: '05', group: 'Eligibility' },
+  { id: 'window',     label: '24-Hour Window',   num: '06', group: 'Eligibility' },
+  // ── COMMUNICATION ───────────────────────────────────────────────────────
+  { id: 'scripts',    label: 'Scripts',          num: '07', group: 'Communication' },
+  // ── FINANCIAL ───────────────────────────────────────────────────────────
+  { id: 'financial',  label: 'Financial Paths',  num: '08', group: 'Financial' },
+  { id: 'checkout',   label: 'Checkout',         num: '09', group: 'Financial' },
+  { id: 'membership', label: 'Membership',       num: '10', group: 'Financial' },
+  { id: 'billing',    label: 'Billing',          num: '11', group: 'Financial' },
+  // ── TRAINING & REFERENCE ────────────────────────────────────────────────
+  { id: 'scenarios',  label: 'Scenarios',        num: '12', group: 'Training' },
+  { id: 'quiza',      label: 'Quiz — Part A',    num: '13', group: 'Training' },
+  { id: 'quizb',      label: 'Quiz — Part B',    num: '13', group: 'Training' },
+  { id: 'glossary',   label: 'Glossary',         num: '14', group: 'Training' },
+  { id: 'policy',     label: 'Manager Policy',   num: '15', group: 'Training' },
+  // ── PPO ─────────────────────────────────────────────────────────────────
+  { id: 'ppo',        label: 'PPO Plans',        num: '16', group: 'PPO' },
+  { id: 'ppoquiz',    label: 'PPO Quiz',         num: '17', group: 'PPO' },
 ]
 
-const PORTFOLIO_KEY = 'kyt-training-portfolio'
+const PORTFOLIO_KEY   = 'kyt-training-portfolio'   // legacy key kept for backwards compat
+const PORTFOLIO_KEY_A = 'kyt-training-portfolio-a'
+const PORTFOLIO_KEY_B = 'kyt-training-portfolio-b'
+
+// Quiz bank split: first 15 = intake/eligibility, last 15 = insurance/communication
+const quizBankA = quizBank.slice(0, 15)   // Zocdoc, OS Record, Intake Form, Member ID, Active vs Verified
+const quizBankB = quizBank.slice(15)      // PPO vs HMO, Network, Unreachable, Communication, Membership, Errors, Recovery, Checkout
 
 // ---------------------------------------------------------------------------
 // Shared components
@@ -946,7 +959,10 @@ function StockSurprise({ score, lifetimeShares }) {
   )
 }
 
-function QuizSection({ onNav }) {
+// ---------------------------------------------------------------------------
+// Shared quiz engine — used by both Part A and Part B
+// ---------------------------------------------------------------------------
+function QuizBase({ bank, partLabel, partTitle, lede, sectionId, storageKey, onNav }) {
   const [phase, setPhase] = useState('intro')
   const [questions, setQuestions] = useState([])
   const [qIndex, setQIndex] = useState(0)
@@ -958,14 +974,13 @@ function QuizSection({ onNav }) {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(PORTFOLIO_KEY)
+      const raw = localStorage.getItem(storageKey)
       if (raw) setPortfolio(JSON.parse(raw))
     } catch { /* ignore */ }
-  }, [])
+  }, [storageKey])
 
   function selectTen() {
-    const shuffled = [...quizBank].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 10)
+    return [...bank].sort(() => Math.random() - 0.5).slice(0, 10)
   }
 
   function startQuiz() {
@@ -993,28 +1008,31 @@ function QuizSection({ onNav }) {
       setSelected(null)
       setLocked(false)
     } else {
-      const finalScore = score + (selected === questions[qIndex].correct ? 0 : 0)
-      const tier = scoreTier(answers.filter(a => a.correct).length + (selected === questions[qIndex]?.correct ? 1 : 0))
-      const credits = tier.pct >= 90 ? 10 : tier.pct >= 80 ? 10 : tier.pct >= 70 ? 5 : 0
-      const next = { attempts: portfolio.attempts + 1, totalCredits: portfolio.totalCredits + credits, bestScore: Math.max(portfolio.bestScore, score + (selected === questions[qIndex]?.correct ? 1 : 0)) }
-      try { localStorage.setItem(PORTFOLIO_KEY, JSON.stringify(next)) } catch { /* ignore */ }
+      const fs = answers.filter(a => a.correct).length + (selected === questions[qIndex]?.correct ? 1 : 0)
+      const tier = scoreTier(fs)
+      const credits = tier.pct >= 80 ? 10 : 5
+      const next = { attempts: portfolio.attempts + 1, totalCredits: portfolio.totalCredits + credits, bestScore: Math.max(portfolio.bestScore, fs) }
+      try { localStorage.setItem(storageKey, JSON.stringify(next)) } catch { /* ignore */ }
       setPortfolio(next)
       setPhase('results')
     }
   }
 
   function reset() {
-    try { localStorage.removeItem(PORTFOLIO_KEY) } catch { /* ignore */ }
+    try { localStorage.removeItem(storageKey) } catch { /* ignore */ }
     setPortfolio({ attempts: 0, totalCredits: 0, bestScore: 0 })
   }
 
   if (phase === 'intro') return (
     <div>
-      <ModuleHeader num="13" title="Eligibility Quiz"
-        lede="Ten randomly selected questions from a bank of 30. Categories include Zocdoc intake, eligibility validation, membership rules, office error, and more. Score 90% or higher to earn New Patient Intake Guardian status." />
+      <ModuleHeader num="13" title={partTitle} lede={lede} />
+      <div className="note-box" style={{ marginBottom: '20px' }}>
+        <span className="tag">{partLabel}</span>
+        10 randomly selected questions drawn from a focused bank of 15. Each attempt pulls a different mix — retake to cover questions you haven't seen yet.
+      </div>
       {portfolio.attempts > 0 && (
         <div className="card" style={{ marginBottom: '24px' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.06em' }}>Your training record</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.06em' }}>Your record — {partLabel}</div>
           <div style={{ display: 'flex', gap: '24px' }}>
             <div><div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', color: 'var(--text)' }}>{portfolio.attempts}</div><div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Attempts</div></div>
             <div><div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', color: 'var(--gold)' }}>{portfolio.bestScore}/10</div><div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Best score</div></div>
@@ -1023,8 +1041,8 @@ function QuizSection({ onNav }) {
           <button className="reveal-btn secondary" style={{ marginTop: '14px', fontSize: '10px', padding: '5px 10px' }} onClick={reset}>Reset (admin / testing)</button>
         </div>
       )}
-      <button className="start-btn" onClick={startQuiz}>Start quiz</button>
-      <PrevNext current="quiz" onChange={onNav} />
+      <button className="start-btn" onClick={startQuiz}>Start {partLabel}</button>
+      <PrevNext current={sectionId} onChange={onNav} />
     </div>
   )
 
@@ -1032,7 +1050,7 @@ function QuizSection({ onNav }) {
     const q = questions[qIndex]
     return (
       <div>
-        <p className="eyebrow">Module 13 — Quiz</p>
+        <p className="eyebrow">Quiz — {partLabel}</p>
         <div className="quiz-meta-row">
           <span>Question {qIndex + 1} of {questions.length}</span>
           <span>{q?.category}</span>
@@ -1080,7 +1098,7 @@ function QuizSection({ onNav }) {
 
   return (
     <div>
-      <p className="eyebrow">Module 13 — Results</p>
+      <p className="eyebrow">{partLabel} — Results</p>
       <h1 className="page-title">Quiz Complete</h1>
       <div className="card results-card">
         <div className="results-score">{finalScore}<span>/10</span></div>
@@ -1088,19 +1106,47 @@ function QuizSection({ onNav }) {
         <p className="results-detail">{tier.detail}</p>
         {categories.length > 0 && (
           <div style={{ marginBottom: '16px', textAlign: 'left', maxWidth: '420px', margin: '0 auto 16px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '8px' }}>Review these modules</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '8px' }}>Review these areas</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               {categories.map(c => <span key={c} className="badge red" style={{ fontSize: '10px' }}>{c}</span>)}
             </div>
           </div>
         )}
         <div className="results-actions">
-          <button className="reveal-btn secondary" onClick={startQuiz}>Retake quiz</button>
+          <button className="reveal-btn secondary" onClick={startQuiz}>Retake {partLabel}</button>
         </div>
       </div>
       <StockSurprise score={finalScore} lifetimeShares={portfolio.totalCredits} />
-      <PrevNext current="quiz" onChange={onNav} />
+      <PrevNext current={sectionId} onChange={onNav} />
     </div>
+  )
+}
+
+function QuizASection({ onNav }) {
+  return (
+    <QuizBase
+      bank={quizBankA}
+      partLabel="Part A"
+      partTitle="Quiz — Part A: Intake & Eligibility"
+      lede="Covers Zocdoc intake, OS record creation, intake form completeness, member ID and subscriber data, and Active vs Verified. Complete Part A before moving to Part B."
+      sectionId="quiza"
+      storageKey={PORTFOLIO_KEY_A}
+      onNav={onNav}
+    />
+  )
+}
+
+function QuizBSection({ onNav }) {
+  return (
+    <QuizBase
+      bank={quizBankB}
+      partLabel="Part B"
+      partTitle="Quiz — Part B: Insurance & Communication"
+      lede="Covers PPO vs HMO, network participation, unreachable patients, patient communication, membership eligibility, office errors, service recovery, and checkout. Complete Part A first."
+      sectionId="quizb"
+      storageKey={PORTFOLIO_KEY_B}
+      onNav={onNav}
+    />
   )
 }
 
@@ -1897,12 +1943,20 @@ export default function App() {
           <span className="sub">Intake & Eligibility Academy</span>
         </div>
         <div className="os-nav">
-          {SECTIONS.map((s) => (
-            <button key={s.id} className={`os-nav-item ${section === s.id ? 'active' : ''}`} onClick={() => setSection(s.id)}>
-              <span className="num">{s.num}</span>
-              {s.label}
-            </button>
-          ))}
+          {SECTIONS.map((s, i) => {
+            const isNewGroup = i === 0 || SECTIONS[i - 1].group !== s.group
+            return (
+              <div key={s.id}>
+                {isNewGroup && (
+                  <div className="nav-group-label">{s.group}</div>
+                )}
+                <button className={`os-nav-item ${section === s.id ? 'active' : ''}`} onClick={() => setSection(s.id)}>
+                  <span className="num">{s.num}</span>
+                  {s.label}
+                </button>
+              </div>
+            )
+          })}
         </div>
         <div className="os-rail-footer">
           KYT NEW PATIENT INTAKE<br />
@@ -1923,7 +1977,8 @@ export default function App() {
         {section === 'membership'  && <MembershipSection onNav={setSection} />}
         {section === 'billing'     && <BillingSection onNav={setSection} />}
         {section === 'scenarios'   && <ScenariosSection onNav={setSection} />}
-        {section === 'quiz'        && <QuizSection onNav={setSection} />}
+        {section === 'quiza'       && <QuizASection onNav={setSection} />}
+        {section === 'quizb'       && <QuizBSection onNav={setSection} />}
         {section === 'glossary'    && <GlossarySection onNav={setSection} />}
         {section === 'policy'      && <PolicySection onNav={setSection} />}
         {section === 'ppo'         && <PPOSection onNav={setSection} />}

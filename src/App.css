@@ -1080,3 +1080,21 @@ p.body-text {
   .os-main { padding: 24px; max-width: 100%; }
   .stock-wrap { display: none; }
 }
+
+/* Nav group labels */
+.nav-group-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-faint);
+  padding: 18px 16px 5px;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 4px;
+  user-select: none;
+}
+.os-nav > div:first-child .nav-group-label {
+  border-top: none;
+  padding-top: 4px;
+  margin-top: 0;
+}
