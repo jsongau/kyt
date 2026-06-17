@@ -1365,3 +1365,344 @@ export const mistakeRecoveryPolicy = [
   'Provide any goodie bag as an unconditional patient-care gesture.',
   'Make any review request separately — ask only for honest feedback.',
 ]
+
+// ---------------------------------------------------------------------------
+// MODULE 16 — INDIVIDUAL PPO PLANS
+// ---------------------------------------------------------------------------
+export const ppoLessons = [
+  {
+    id: 'l1',
+    num: '01',
+    title: 'What is a PPO dental plan?',
+    lede: 'The model behind almost every individual plan a patient will buy — and why it beats the alternatives for someone who wants to keep seeing us.',
+    body: [
+      'PPO stands for Preferred Provider Organization. It\'s a type of dental insurance built around a network of dentists who have agreed to accept the carrier\'s negotiated fees. The patient still gets to choose any licensed dentist, but they pay the least when they stay in-network — which is exactly why a PPO is the right answer for a patient who wants to keep coming to KYT.',
+      'An individual PPO is simply a PPO a person buys for themselves, rather than getting it through an employer. They enroll directly with the carrier, pay a monthly premium, and the plan activates on a set effective date — sometimes the next business day. That speed is the whole pitch: a patient who lost their job, aged off a parent\'s plan, or is stuck in an employer waiting period can be covered before their next visit.',
+    ],
+    comparison: [
+      { feature: 'Pick your dentist?', ppo: 'Any licensed dentist; cheapest in-network', hmo: 'Only an assigned in-network dentist', discount: 'Any dentist who honors the card', ppoBest: true, hmoBad: true },
+      { feature: 'Is it insurance?', ppo: 'Yes — the plan pays a share of the bill', hmo: 'Yes — fixed copays per procedure', discount: 'No — just a discounted fee list', discountBad: true },
+      { feature: 'How you pay', ppo: 'Coinsurance (a % of the cost)', hmo: 'Set copay per procedure', discount: 'You pay the full discounted fee' },
+      { feature: 'Annual cap', ppo: 'Has an annual maximum', hmo: 'Usually no annual max', discount: 'No payout at all', discountBad: true },
+      { feature: 'Best for', ppo: 'Keeping your dentist + real coverage on big work', hmo: 'Lowest premium if you\'ll switch dentists', discount: 'The uninsured who just want a lower cash price', ppoBest: true },
+    ],
+    script: 'A PPO lets you keep seeing us and still get insurance to pay a share of the work — an HMO would make you switch dentists, and a discount card isn\'t insurance at all.',
+    markCompletePrompt: 'Got the model down? Mark this lesson complete.',
+  },
+  {
+    id: 'l2',
+    num: '02',
+    title: 'How the coverage actually works',
+    lede: 'Premium, deductible, coinsurance tiers, and the annual maximum — the four numbers that decide a patient\'s real bill.',
+    body: [
+      'Every PPO sorts dental work into three tiers and pays a different share of each. The pattern almost never changes — only the percentages and the fine print do.',
+    ],
+    tiers: [
+      { pct: '100%', name: 'Preventive', ex: 'Cleanings, exams, x-rays. Usually free, day one.' },
+      { pct: '~80%', name: 'Basic', ex: 'Fillings, simple extractions. You pay ~20%.' },
+      { pct: '~50%', name: 'Major', ex: 'Crowns, root canals, dentures, implants. You pay ~half.' },
+    ],
+    analogy: 'Coinsurance is just how the bill gets split. On preventive the plan buys the whole meal; on basic you cover the tip; on major you split it down the middle. The cheaper the plan, the more of the major-work check the patient picks up — which is why premium alone never tells the story.',
+    body2: [
+      'The deductible is the patient\'s first out-of-pocket dollars on restorative work — usually about $50 — before the plan starts reimbursing. Preventive cleanings are almost always exempt.',
+      'The annual maximum is the ceiling: the most the plan will pay in one plan year. Hit it, and everything after is 100% on the patient — even work the plan would normally cover at 80%. It resets each year. Plans range from a $1,000 cap (UHC) to $10,000 (MetLife).',
+    ],
+    workedExample: 'A patient needs a $1,200 crown on a plan that covers major at 50% with a $50 deductible and a $1,500 annual max. They pay the $50 deductible, then split the remaining $1,150 → the plan pays ~$575, the patient pays ~$575.',
+    note: 'Many cheap plans phase major coverage — they pay 20% in Year 1 and step up to 50% in Year 2. Ameritas is the example. Great premium, but a patient who needs a crown immediately should know they\'ll only get 20% back this year.',
+    markCompletePrompt: 'Comfortable reading a plan\'s four numbers? Mark complete.',
+  },
+  {
+    id: 'l3',
+    num: '03',
+    title: 'Waiting periods — the part patients get wrong',
+    lede: 'A plan can be active and still not pay for the work a patient needs. This is the single most important thing to explain honestly, up front.',
+    body: [
+      'A waiting period is the delay between the day coverage starts and the day a tier of treatment becomes usable. Preventive care almost always starts day one. Basic work often waits 0–3 months. Major work — crowns, root canals, implants — commonly waits 6–12 months.',
+    ],
+    analogy: 'Joining a PPO is like joining a gym. You can use the treadmill the day you sign up (that\'s preventive). The free-weights room opens a few weeks later (basic). But the personal-trainer-and-sauna package — the expensive stuff — doesn\'t unlock for months (major). The membership is real on day one; not every room is.',
+    waitTimeline: [
+      { label: 'Preventive', sub: 'cleanings, exams, x-rays', width: 8, tone: 'now', text: 'Day 1' },
+      { label: 'Basic', sub: 'fillings, extractions', width: 34, tone: 'short', text: '0–3 months (varies)' },
+      { label: 'Major', sub: 'crowns, root canals, implants', width: 92, tone: 'long', text: '6–12 months (varies)' },
+    ],
+    script: '"Your plan is active — but that doesn\'t always mean every service is usable yet. Let\'s confirm which treatments are covered today versus which ones have a waiting period, so there are no surprises when you sit in the chair."',
+    body2: [
+      'Why do waiting periods exist? They stop people from enrolling, getting a $2,000 crown, and cancelling the next month. The trade-off: no-wait plans charge a higher premium; long-wait plans are cheaper but lock the patient out of major coverage early.',
+      'The practical move at the front desk: match the timeline to the treatment. A patient who needs a crown next month and a plan with a 12-month major wait is a mismatch you should catch before they enroll.',
+    ],
+    markCompletePrompt: 'Can you explain "active vs usable" in one breath? Mark complete.',
+  },
+  {
+    id: 'l4',
+    num: '04',
+    title: 'The fine print patients deserve to hear',
+    lede: 'The missing-tooth clause, frequency limits, and the difference between an effective date and a waiting period. Disclose these honestly — every time.',
+    body: [
+      'The missing-tooth clause is the one that burns patients most often. Many PPOs will not pay to replace a tooth that was already missing before the policy started. If a patient lost a molar last year and buys a plan today hoping to get an implant covered, the missing-tooth clause can deny it entirely.',
+    ],
+    script: '"Because that tooth was already missing before this policy starts, the plan likely won\'t cover the implant to replace it — that\'s the missing-tooth clause, and I want you to know it upfront. Let\'s request a pretreatment estimate in writing before you commit."',
+    gotchas: [
+      { label: 'Frequency limits', detail: 'Plans cap how often they\'ll pay: cleanings/exams ~2×/year, bitewing x-rays ~1×/year, a panoramic x-ray every 3–5 years, a crown once per 5–7 years per tooth. Do it early and the patient pays 100%. Always check the last service date.' },
+      { label: 'Effective date ≠ waiting period', detail: 'The effective date is when coverage begins. The waiting period is when a tier becomes usable. A plan can be effective tomorrow yet still make a patient wait 12 months for a crown. Quote both separately.' },
+    ],
+    body2: [
+      'Adult orthodontics is rare on individual PPOs — Delta is the one exception, and even then expect lifetime caps. And the annual maximum can run out mid-treatment: a big case can exhaust a $1,000 cap on a single crown, leaving the rest of the year at full price. Flag it before treatment, not after.',
+    ],
+    complianceNote: 'We\'re an independent practice, not affiliated with any carrier. We share plan facts and help patients find enrollment links — we never tell a patient which plan to buy as advice, interpret their coverage, or guarantee benefits. When a patient asks "which one should I buy?", hand off to a licensed agent and confirm all benefits with the carrier in writing.',
+    markCompletePrompt: 'Know the missing-tooth line by heart? Mark complete.',
+  },
+  {
+    id: 'l5',
+    num: '05',
+    title: 'The eight plans — which is good for what',
+    lede: 'The whole shelf at a glance. Use the filter to match the patient\'s need to the right plan. Numbers are indicative — always confirm against the carrier\'s current Schedule of Benefits.',
+    markCompletePrompt: 'Know the shelf well enough to match a walk-in? Mark complete, then take the PPO quiz.',
+  },
+]
+
+export const ppoPlans = [
+  {
+    key: 'uhc', carrier: 'UnitedHealthcare', name: 'Primary Dental',
+    monthly: 30, annualMax: 1000, score: 74,
+    best: 'Cheapest on the shelf, basic care from day one (ages 64 and under).',
+    bestSelling: true, vision: false,
+    tags: ['cheap'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 50, wait: 0 }, major: null, implant: null },
+    note: 'No major coverage at all; ages ≤64. Active in 1–3 business days.',
+    fit: 'Just cleanings or a tight budget. A fast, cheap bridge after losing work coverage.',
+  },
+  {
+    key: 'ameritas', carrier: 'Ameritas', name: 'PrimeStar Care Complete',
+    monthly: 60, annualMax: 2000, score: 80,
+    best: 'No waiting periods, and the only plan that covers bone grafts.',
+    bestSelling: false, vision: false,
+    tags: ['nowait'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 80, wait: 0 }, major: { pct: 20, wait: 0, note: '50% Year 2+' }, implant: null },
+    note: 'Major pays just 20% in Year 1, then 50%. Active next business day.',
+    fit: 'Needs work now. Crown or root canal soon and can\'t wait out a 12-month clock.',
+  },
+  {
+    key: 'guardian', carrier: 'Guardian', name: 'Premier 2.0',
+    monthly: 70, annualMax: 3000, score: 85,
+    best: '85% basic from day one, plus whitening and kids\' braces.',
+    bestSelling: true, vision: false,
+    tags: ['ortho', 'implant'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 85, wait: 0 }, major: { pct: 50, wait: 12 }, implant: { pct: 50, wait: 12 } },
+    note: 'Child ortho (<19) + whitening. Major/implant wait 12 mo. Activates 1st of month.',
+    fit: 'Families. A filling today (85% day one) and a kid who may need braces.',
+  },
+  {
+    key: 'delta', carrier: 'Delta Dental', name: 'PPO Individual Premium',
+    monthly: 75, annualMax: 2000, score: 84,
+    best: 'Orthodontics for braces and aligners — adults too — plus implants.',
+    bestSelling: false, vision: false,
+    tags: ['ortho', 'implant'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 80, wait: 6 }, major: { pct: 50, wait: 12 }, implant: { pct: 50, wait: 12 } },
+    note: 'The only plan with adult ortho. Activates 1st or 15th (your choice).',
+    fit: 'Adult Invisalign or braces. The one plan that covers orthodontics for grown-ups.',
+  },
+  {
+    key: 'aetna', carrier: 'Aetna', name: 'Dental Direct',
+    monthly: 50, annualMax: 1250, score: 77,
+    best: 'Balanced coverage for everyday dental needs.',
+    bestSelling: false, vision: false,
+    tags: ['cheap'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 80, wait: 6 }, major: { pct: 50, wait: 12 }, implant: null },
+    note: 'Solid mid-tier fallback for a patient who can wait. Activates 1st of month.',
+    fit: 'Balanced & can wait. Reliable everyday coverage at a moderate premium.',
+  },
+  {
+    key: 'moo', carrier: 'Mutual of Omaha', name: 'Dental Preferred',
+    monthly: 90, annualMax: 5000, score: 83,
+    best: 'High $5,000 maximum with implant coverage.',
+    bestSelling: false, vision: false,
+    tags: ['implant', 'highmax'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 80, wait: 0 }, major: { pct: 50, wait: 6 }, implant: { pct: 50, wait: 12 } },
+    note: 'Big $5,000 cap. Underwritten by TruAssure. Active in 1–3 business days.',
+    fit: 'Big case / implants. Lots of major work where a low annual cap would run out.',
+  },
+  {
+    key: 'humana', carrier: 'Humana', name: 'Extend 5000',
+    monthly: 100, annualMax: 5000, score: 86,
+    best: 'Dental, vision, and a $200/yr whitening allowance, with faster implants.',
+    bestSelling: false, vision: true,
+    tags: ['implant', 'highmax'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: { pct: 80, wait: 3 }, major: { pct: 50, wait: 6 }, implant: { pct: 50, wait: 6 } },
+    note: 'Fastest implant ramp (6 mo) + vision + whitening allowance. $75 deductible.',
+    fit: 'Implants, fast. Shortest major/implant wait, plus vision perks.',
+  },
+  {
+    key: 'metlife', carrier: 'MetLife', name: 'NCD Complete',
+    monthly: null, annualMax: 10000, score: null,
+    best: 'Highest annual maximum on the shelf ($10,000).',
+    bestSelling: false, vision: false, review: true,
+    tags: ['highmax'],
+    cov: { preventive: { pct: 100, wait: 0 }, basic: null, major: null, implant: null },
+    note: 'Priced around $100/mo. Effectiveness still under review.',
+    fit: 'Highest max — pending. Biggest ceiling on the board, gathering reviews.',
+  },
+]
+
+export const ppoFilters = [
+  { key: 'all', label: 'All plans' },
+  { key: 'cheap', label: 'Tight budget' },
+  { key: 'nowait', label: 'Work now / no wait' },
+  { key: 'implant', label: 'Implants' },
+  { key: 'ortho', label: 'Braces / Invisalign' },
+  { key: 'highmax', label: 'High annual max' },
+]
+
+export const ppoFilterFns = {
+  cheap: p => ['uhc', 'aetna'].includes(p.key),
+  nowait: p => ['ameritas', 'guardian', 'moo', 'uhc'].includes(p.key),
+  implant: p => !!p.cov.implant,
+  ortho: p => ['guardian', 'delta'].includes(p.key),
+  highmax: p => p.annualMax >= 5000,
+}
+
+export const ppoMatchGuide = [
+  { need: 'Just cleanings / tight budget', pick: 'UHC — cheapest, preventive + basic day one.' },
+  { need: 'A filling, soon', pick: 'Guardian (85% day one) or Ameritas (no wait).' },
+  { need: 'Crown or root canal soon', pick: 'Ameritas (no waiting period) or Humana (major at 6 mo).' },
+  { need: 'An implant', pick: 'Humana (fastest, 6 mo + vision) or Mutual of Omaha ($5k max).' },
+  { need: 'Kid needs braces', pick: 'Guardian — child ortho under 19.' },
+  { need: 'Adult Invisalign / braces', pick: 'Delta — the only adult ortho plan.' },
+  { need: 'Just lost work coverage', pick: 'UHC (fast, cheap bridge) or Ameritas (no waits).' },
+  { need: 'Lots of big work / high max', pick: 'Mutual of Omaha or Humana ($5k); MetLife $10k (pending).' },
+]
+
+// ---------------------------------------------------------------------------
+// MODULE 17 — PPO QUIZ (10 questions, separate from the main 30-question bank)
+// ---------------------------------------------------------------------------
+export const ppoQuizBank = [
+  {
+    id: 'ppo-01',
+    category: 'PPO Fundamentals',
+    prompt: 'A patient wants to keep seeing us at KYT and still have insurance pay a share of their crown. Which model fits?',
+    options: [
+      { key: 'a', text: 'A PPO plan' },
+      { key: 'b', text: 'A dental HMO' },
+      { key: 'c', text: 'A discount card' },
+      { key: 'd', text: 'None — they must pay cash' },
+    ],
+    correct: 'a',
+    explanation: 'A PPO lets the patient choose any licensed dentist (so they can stay with us) while the plan pays a share of covered work. An HMO would assign them a different in-network dentist; a discount card isn\'t insurance.',
+  },
+  {
+    id: 'ppo-02',
+    category: 'Coverage Tiers',
+    prompt: 'On a typical PPO, what share does the plan usually cover for major work like a crown or root canal?',
+    options: [
+      { key: 'a', text: '100%' },
+      { key: 'b', text: '~80%' },
+      { key: 'c', text: '~50%' },
+      { key: 'd', text: '0%' },
+    ],
+    correct: 'c',
+    explanation: 'The standard tier pattern is 100% preventive, ~80% basic, ~50% major. The patient generally splits the major-work bill with the plan.',
+  },
+  {
+    id: 'ppo-03',
+    category: 'Waiting Periods',
+    prompt: 'A patient says "my plan is active, so the crown is covered, right?" What\'s the honest answer?',
+    options: [
+      { key: 'a', text: 'Yes, active means everything is usable' },
+      { key: 'b', text: 'Not necessarily — major work may still have a waiting period' },
+      { key: 'c', text: 'Only if they paid the deductible' },
+      { key: 'd', text: 'Only in-network' },
+    ],
+    correct: 'b',
+    explanation: 'Active is not the same as usable. A plan can be effective immediately yet still impose a 6–12 month waiting period on major services. Always confirm which tiers are usable today.',
+  },
+  {
+    id: 'ppo-04',
+    category: 'Fine Print',
+    prompt: 'A patient lost a molar last year and wants an implant covered by a plan they\'d buy today. What must you disclose?',
+    options: [
+      { key: 'a', text: 'Nothing — implants are always covered' },
+      { key: 'b', text: 'The missing-tooth clause may deny it' },
+      { key: 'c', text: 'They just need to wait 30 days' },
+      { key: 'd', text: 'Implants are preventive care' },
+    ],
+    correct: 'b',
+    explanation: 'The missing-tooth clause excludes replacing teeth lost before the policy\'s effective date. Disclose it upfront and request a pretreatment estimate in writing.',
+  },
+  {
+    id: 'ppo-05',
+    category: 'Plan Matching',
+    prompt: 'A patient needs a crown next month and has a tight timeline. Which plan best avoids a long major-work wait?',
+    options: [
+      { key: 'a', text: 'UHC Primary Dental' },
+      { key: 'b', text: 'Aetna Dental Direct' },
+      { key: 'c', text: 'Ameritas PrimeStar Care Complete' },
+      { key: 'd', text: 'MetLife NCD Complete' },
+    ],
+    correct: 'c',
+    explanation: 'Ameritas has no waiting periods (though major pays 20% in Year 1). UHC doesn\'t cover major at all; Aetna waits 12 months on major; MetLife is still under review.',
+  },
+  {
+    id: 'ppo-06',
+    category: 'Plan Matching',
+    prompt: 'Which plan is the right pointer for an adult who wants Invisalign?',
+    options: [
+      { key: 'a', text: 'Delta Dental PPO Individual Premium' },
+      { key: 'b', text: 'Guardian Premier 2.0' },
+      { key: 'c', text: 'UHC Primary Dental' },
+      { key: 'd', text: 'Humana Extend 5000' },
+    ],
+    correct: 'a',
+    explanation: 'Delta is the only plan that covers orthodontics for adults. Guardian covers child ortho (under 19) only.',
+  },
+  {
+    id: 'ppo-07',
+    category: 'Plan Matching',
+    prompt: 'A patient wants an implant as fast as possible and likes the idea of vision perks. Best pointer?',
+    options: [
+      { key: 'a', text: 'UHC Primary Dental' },
+      { key: 'b', text: 'Humana Extend 5000' },
+      { key: 'c', text: 'Aetna Dental Direct' },
+      { key: 'd', text: 'Guardian Premier 2.0' },
+    ],
+    correct: 'b',
+    explanation: 'Humana Extend 5000 has the fastest implant ramp (6-month wait), a $5,000 max, plus bundled vision and a whitening allowance.',
+  },
+  {
+    id: 'ppo-08',
+    category: 'Coverage Tiers',
+    prompt: 'What does the annual maximum do once a patient hits it mid-year?',
+    options: [
+      { key: 'a', text: 'It doubles for the rest of the year' },
+      { key: 'b', text: 'Nothing changes' },
+      { key: 'c', text: 'Further covered work is 100% out of pocket until it resets' },
+      { key: 'd', text: 'The plan cancels' },
+    ],
+    correct: 'c',
+    explanation: 'The annual maximum is the ceiling on what the plan pays per plan year. After it\'s reached, the patient pays 100% until it resets the next plan year.',
+  },
+  {
+    id: 'ppo-09',
+    category: 'Plan Matching',
+    prompt: 'A patient just lost their job and wants something cheap and fast as a bridge to new coverage. Best pointer?',
+    options: [
+      { key: 'a', text: 'MetLife NCD Complete' },
+      { key: 'b', text: 'Delta Dental' },
+      { key: 'c', text: 'UHC Primary Dental' },
+      { key: 'd', text: 'Mutual of Omaha' },
+    ],
+    correct: 'c',
+    explanation: 'UHC is the cheapest on the shelf and active in 1–3 business days with preventive and basic from day one — a clean short-term bridge. Ameritas is the no-wait alternative.',
+  },
+  {
+    id: 'ppo-10',
+    category: 'Compliance',
+    prompt: 'A patient asks you point-blank, "Which plan should I buy?" What\'s the compliant move?',
+    options: [
+      { key: 'a', text: 'Recommend the highest-rated plan' },
+      { key: 'b', text: 'Tell them to buy the cheapest' },
+      { key: 'c', text: 'Share the facts, then hand off to a licensed agent' },
+      { key: 'd', text: 'Guarantee the benefits of one plan' },
+    ],
+    correct: 'c',
+    explanation: 'We educate and compare, but we don\'t sell or advise. Hand off to a licensed agent for the actual "which to buy" decision and confirm benefits with the carrier — that\'s the compliant path.',
+  },
+]

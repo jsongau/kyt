@@ -10,6 +10,7 @@ import {
   scenarios, quizBank, scoreTier, managementPolicy, glossary,
   coreRule, riskSignals, internalNote, statusLabels, zocdocSteps,
   chairsideScript, complianceWording, mistakeRecoveryPolicy,
+  ppoLessons, ppoPlans, ppoFilters, ppoFilterFns, ppoMatchGuide, ppoQuizBank,
 } from './data.js'
 
 const SECTIONS = [
@@ -28,6 +29,8 @@ const SECTIONS = [
   { id: 'quiz',       label: 'Quiz',             num: '13' },
   { id: 'glossary',   label: 'Glossary',         num: '14' },
   { id: 'policy',     label: 'Manager Policy',   num: '15' },
+  { id: 'ppo',        label: 'PPO Plans',        num: '16' },
+  { id: 'ppoquiz',    label: 'PPO Quiz',         num: '17' },
 ]
 
 const PORTFOLIO_KEY = 'kyt-training-portfolio'
@@ -1154,6 +1157,482 @@ function PolicySection({ onNav }) {
 }
 
 // ---------------------------------------------------------------------------
+// MODULE 16 — PPO PLANS
+// ---------------------------------------------------------------------------
+function PPOSection({ onNav }) {
+  const [activeLesson, setActiveLesson] = useState('l1')
+  const [completedLessons, setCompletedLessons] = useState({})
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [hiddenPlans, setHiddenPlans] = useState({})
+
+  function toggleComplete(id) {
+    setCompletedLessons(c => ({ ...c, [id]: !c[id] }))
+  }
+
+  function applyFilter(key) {
+    setActiveFilter(key)
+    const hidden = {}
+    if (key !== 'all') {
+      ppoPlans.forEach(p => {
+        const fn = ppoFilterFns[key]
+        if (fn && !fn(p)) hidden[p.key] = true
+      })
+    }
+    setHiddenPlans(hidden)
+  }
+
+  const lesson = ppoLessons.find(l => l.id === activeLesson)
+  const doneCount = Object.values(completedLessons).filter(Boolean).length
+
+  return (
+    <div>
+      <ModuleHeader num="16" title="Individual PPO Dental Plans"
+        lede="When a patient walks in without usable coverage, an individual PPO is the fix. This module trains you to explain what a PPO is, how its waiting periods and limits work, and which of the eight plans fits the patient in front of you." />
+
+      <div className="note-box" style={{ marginBottom: '24px' }}>
+        <span className="tag">Training scope</span>
+        Plan figures are indicative — waiting periods, percentages, and activation rules vary by carrier and state. Always confirm against the carrier's current Schedule of Benefits before quoting a patient.
+      </div>
+
+      {/* Lesson nav */}
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '28px' }}>
+        {ppoLessons.map(l => (
+          <button key={l.id} className={`os-nav-item ${activeLesson === l.id ? 'active' : ''}`}
+            style={{ padding: '8px 14px', fontSize: '12px', position: 'relative' }}
+            onClick={() => setActiveLesson(l.id)}>
+            {completedLessons[l.id] && <span style={{ color: 'var(--teal)', marginRight: '5px' }}>✓</span>}
+            {l.num} · {l.title.split('—')[0].trim()}
+          </button>
+        ))}
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', alignSelf: 'center', marginLeft: '6px' }}>{doneCount}/5 complete</span>
+      </div>
+
+      {/* Lesson 1 */}
+      {activeLesson === 'l1' && lesson && (
+        <section className="panel">
+          <h2 className="section-title">{lesson.title}</h2>
+          <p className="lede" style={{ marginBottom: '20px' }}>{lesson.lede}</p>
+          {lesson.body.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          {/* Comparison table */}
+          <div style={{ overflowX: 'auto', marginBottom: '24px' }}>
+            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', fontSize: '13px', background: 'var(--surface-2)' }}>
+              <thead>
+                <tr>
+                  <th style={{ padding: '10px 14px', background: 'var(--surface-3)', fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--text-faint)', borderBottom: '1px solid var(--border)', textAlign: 'left' }}></th>
+                  {['PPO (recommended)', 'HMO / DHMO', 'Discount plan'].map(h => (
+                    <th key={h} style={{ padding: '10px 14px', background: 'var(--surface-3)', fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.06em', color: h.includes('PPO') ? 'var(--gold)' : 'var(--text-faint)', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {lesson.comparison.map((row, i) => (
+                  <tr key={i}>
+                    <td style={{ padding: '11px 14px', borderBottom: '1px solid var(--border-soft)', fontWeight: 600, color: 'var(--text)', fontSize: '12.5px', whiteSpace: 'nowrap' }}>{row.feature}</td>
+                    <td style={{ padding: '11px 14px', borderBottom: '1px solid var(--border-soft)', color: row.ppoBest ? 'var(--teal)' : 'var(--text-dim)', fontSize: '12.5px' }}>{row.ppo}</td>
+                    <td style={{ padding: '11px 14px', borderBottom: '1px solid var(--border-soft)', color: row.hmoBad ? 'var(--red)' : 'var(--text-dim)', fontSize: '12.5px' }}>{row.hmo}</td>
+                    <td style={{ padding: '11px 14px', borderBottom: '1px solid var(--border-soft)', color: row.discountBad ? 'var(--red)' : 'var(--text-dim)', fontSize: '12.5px' }}>{row.discount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <ScriptCard label="The one-line version for patients" text={lesson.script} />
+
+          <button className={`reveal-btn ${completedLessons[lesson.id] ? '' : 'secondary'}`} style={{ marginTop: '8px' }} onClick={() => toggleComplete(lesson.id)}>
+            {completedLessons[lesson.id] ? '✓ Completed' : 'Mark lesson complete'}
+          </button>
+        </section>
+      )}
+
+      {/* Lesson 2 */}
+      {activeLesson === 'l2' && lesson && (
+        <section className="panel">
+          <h2 className="section-title">{lesson.title}</h2>
+          <p className="lede" style={{ marginBottom: '20px' }}>{lesson.lede}</p>
+          {lesson.body.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '24px' }}>
+            {lesson.tiers.map((t, i) => (
+              <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px', textAlign: 'center' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '36px', color: i === 0 ? 'var(--teal)' : i === 1 ? 'var(--gold)' : 'var(--text-faint)', lineHeight: 1 }}>{t.pct}</div>
+                <div style={{ fontWeight: 700, fontSize: '12px', letterSpacing: '.04em', textTransform: 'uppercase', margin: '8px 0 6px', color: 'var(--text)' }}>{t.name}</div>
+                <div style={{ fontSize: '12.5px', color: 'var(--text-faint)' }}>{t.ex}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="note-box" style={{ marginBottom: '20px' }}>
+            <span className="tag">Analogy — "split the check"</span>
+            {lesson.analogy}
+          </div>
+
+          {lesson.body2.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--gold-line)', borderRadius: 'var(--radius)', padding: '18px 22px', marginBottom: '20px' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--gold)', display: 'block', marginBottom: '8px' }}>Worked example</span>
+            <p style={{ fontSize: '13.5px', color: 'var(--text-dim)', lineHeight: 1.65, margin: 0 }}>{lesson.workedExample}</p>
+          </div>
+
+          <p className="body-text" style={{ fontStyle: 'italic', color: 'var(--text-faint)' }}>{lesson.note}</p>
+
+          <button className={`reveal-btn ${completedLessons[lesson.id] ? '' : 'secondary'}`} onClick={() => toggleComplete(lesson.id)}>
+            {completedLessons[lesson.id] ? '✓ Completed' : 'Mark lesson complete'}
+          </button>
+        </section>
+      )}
+
+      {/* Lesson 3 */}
+      {activeLesson === 'l3' && lesson && (
+        <section className="panel">
+          <h2 className="section-title">{lesson.title}</h2>
+          <p className="lede" style={{ marginBottom: '20px' }}>{lesson.lede}</p>
+          {lesson.body.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <div className="note-box" style={{ marginBottom: '20px' }}>
+            <span className="tag">Analogy — "the new-gym rule"</span>
+            {lesson.analogy}
+          </div>
+
+          {/* Wait timeline */}
+          <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '22px 24px', marginBottom: '20px' }}>
+            {lesson.waitTimeline.map((row, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: '130px 1fr', gap: '14px', alignItems: 'center', padding: '12px 0', borderBottom: i < lesson.waitTimeline.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text)' }}>{row.label}</div>
+                  <div style={{ fontSize: '11.5px', color: 'var(--text-faint)' }}>{row.sub}</div>
+                </div>
+                <div style={{ position: 'relative', height: '30px', background: 'var(--surface-3)', borderRadius: '6px', overflow: 'hidden' }}>
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, height: '100%', width: `${row.width}%`,
+                    background: row.tone === 'now' ? 'var(--teal)' : row.tone === 'short' ? 'var(--teal)' : 'var(--gold)',
+                    opacity: row.tone === 'short' ? 0.65 : 1,
+                    display: 'flex', alignItems: 'center', padding: '0 10px',
+                    fontSize: '11.5px', fontWeight: 600, color: '#0a0d12', whiteSpace: 'nowrap', borderRadius: '6px',
+                  }}>{row.text}</div>
+                </div>
+              </div>
+            ))}
+            <div style={{ display: 'grid', gridTemplateColumns: '130px 1fr', gap: '14px', marginTop: '8px' }}>
+              <div />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-faint)' }}>
+                {['Day 1', '3 mo', '6 mo', '9 mo', '12 mo'].map(m => <span key={m}>{m}</span>)}
+              </div>
+            </div>
+          </div>
+
+          <div className="active-banner" style={{ marginBottom: '20px' }}>
+            <div className="active-banner-hed">The trap: "active" ≠ "usable"</div>
+            <div className="script-card" style={{ marginTop: '12px', marginBottom: 0 }}>
+              <div className="script-text">{lesson.script}</div>
+            </div>
+          </div>
+
+          {lesson.body2.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <button className={`reveal-btn ${completedLessons[lesson.id] ? '' : 'secondary'}`} onClick={() => toggleComplete(lesson.id)}>
+            {completedLessons[lesson.id] ? '✓ Completed' : 'Mark lesson complete'}
+          </button>
+        </section>
+      )}
+
+      {/* Lesson 4 */}
+      {activeLesson === 'l4' && lesson && (
+        <section className="panel">
+          <h2 className="section-title">{lesson.title}</h2>
+          <p className="lede" style={{ marginBottom: '20px' }}>{lesson.lede}</p>
+          {lesson.body.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <ScriptCard label="Say this verbatim before quoting any implant or bridge" text={lesson.script} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', margin: '20px 0' }}>
+            {lesson.gotchas.map((g, i) => (
+              <div key={i} className="card">
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--red)', marginBottom: '8px' }}>Gotcha {String(i + 2).padStart(2, '0')}</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '17px', color: 'var(--text)', marginBottom: '8px' }}>{g.label}</div>
+                <p style={{ fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.6, margin: 0 }}>{g.detail}</p>
+              </div>
+            ))}
+          </div>
+
+          {lesson.body2.map((b, i) => <p key={i} className="body-text">{b}</p>)}
+
+          <div className="note-box" style={{ marginBottom: '20px' }}>
+            <span className="tag">Compliance line — we are educators, not sellers</span>
+            {lesson.complianceNote}
+          </div>
+
+          <button className={`reveal-btn ${completedLessons[lesson.id] ? '' : 'secondary'}`} onClick={() => toggleComplete(lesson.id)}>
+            {completedLessons[lesson.id] ? '✓ Completed' : 'Mark lesson complete'}
+          </button>
+        </section>
+      )}
+
+      {/* Lesson 5 — Plan Grid */}
+      {activeLesson === 'l5' && lesson && (
+        <section className="panel">
+          <h2 className="section-title">{lesson.title}</h2>
+          <p className="lede" style={{ marginBottom: '20px' }}>{lesson.lede}</p>
+
+          {/* Filter chips */}
+          <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap', marginBottom: '20px', alignItems: 'center' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-faint)', fontWeight: 600, marginRight: '4px' }}>Patient needs:</span>
+            {ppoFilters.map(f => (
+              <button key={f.key} onClick={() => applyFilter(f.key)}
+                style={{ border: `1px solid ${activeFilter === f.key ? 'var(--gold)' : 'var(--border)'}`, background: activeFilter === f.key ? 'var(--gold)' : 'var(--surface-2)', borderRadius: '999px', padding: '7px 14px', fontSize: '12.5px', color: activeFilter === f.key ? 'var(--bg)' : 'var(--text-dim)', cursor: 'pointer', fontWeight: activeFilter === f.key ? 600 : 400 }}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Plan cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', marginBottom: '36px' }}>
+            {ppoPlans.map(p => (
+              <div key={p.key} className="card" style={{ opacity: hiddenPlans[p.key] ? 0.25 : 1, filter: hiddenPlans[p.key] ? 'saturate(.5)' : 'none', transition: 'opacity .2s, filter .2s', border: p.review ? '1px dashed var(--border)' : '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-faint)', marginBottom: '3px' }}>{p.carrier}</div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text)' }}>{p.name}</div>
+                  </div>
+                  {p.score && (
+                    <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--teal)', lineHeight: 1 }}>{p.score}</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.06em' }}>rating</div>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                  {p.bestSelling && <span className="badge gold" style={{ fontSize: '10px' }}>Best selling</span>}
+                  {p.vision && <span className="badge teal" style={{ fontSize: '10px' }}>+ Vision</span>}
+                  {p.review && <span className="badge neutral" style={{ fontSize: '10px' }}>Gathering reviews</span>}
+                </div>
+
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: p.review ? '15px' : '26px', color: p.review ? 'var(--text-faint)' : 'var(--text)', marginBottom: '4px' }}>
+                  {p.monthly ? `$${p.monthly}/mo` : '~$100/mo · pending'}
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: 'var(--gold)', marginBottom: '10px' }}>Annual max: ${p.annualMax.toLocaleString()}</div>
+
+                {/* Coverage lines */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0, borderTop: '1px solid var(--border-soft)', marginBottom: '12px' }}>
+                  {[
+                    ['Cleanings', p.cov.preventive],
+                    ['Fillings', p.cov.basic],
+                    ['Crowns / RCT', p.cov.major],
+                    ['Implants', p.cov.implant],
+                  ].map(([label, c]) => (
+                    <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border-soft)', fontSize: '12.5px' }}>
+                      <span style={{ color: 'var(--text-dim)' }}>{label}</span>
+                      {!c ? (
+                        <span style={{ color: 'var(--text-faint)' }}>Not covered</span>
+                      ) : (
+                        <span style={{ color: c.wait > 0 ? 'var(--gold)' : 'var(--teal)', fontWeight: 600 }}>
+                          {c.pct}% · {c.wait === 0 ? 'day 1' : `${c.wait}mo wait`}{c.note ? ` (${c.note})` : ''}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ background: 'var(--surface-3)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', fontSize: '12.5px', color: 'var(--teal)', lineHeight: 1.5 }}>
+                  {p.fit}
+                </div>
+                {p.note && <div style={{ fontSize: '11px', color: 'var(--text-faint)', marginTop: '8px', lineHeight: 1.5 }}>{p.note}</div>}
+              </div>
+            ))}
+          </div>
+
+          {/* Match cheat sheet */}
+          <h2 className="section-title" style={{ marginBottom: '12px' }}>Front-desk cheat sheet</h2>
+          <p style={{ fontSize: '12.5px', color: 'var(--text-faint)', marginBottom: '16px' }}>Frame this as education and comparison, never a personalized sale.</p>
+          <div className="card" style={{ marginBottom: '24px' }}>
+            {ppoMatchGuide.map((row, i) => (
+              <div key={i} style={{ display: 'flex', gap: '16px', padding: '12px 0', borderBottom: i < ppoMatchGuide.length - 1 ? '1px solid var(--border-soft)' : 'none', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                <div style={{ flex: '0 0 220px', fontFamily: 'var(--font-display)', fontSize: '14px', color: 'var(--text)', lineHeight: 1.35 }}>{row.need}</div>
+                <div style={{ flex: 1, fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: row.pick.replace(/([A-Z][a-z]+ (?:Dental|PPO|Premier|PrimeStar|Primary|Extend|NCD)[^\s.]*)/g, '<strong style="color:var(--teal)">$1</strong>') }} />
+              </div>
+            ))}
+          </div>
+
+          <button className={`reveal-btn ${completedLessons[lesson.id] ? '' : 'secondary'}`} onClick={() => toggleComplete(lesson.id)}>
+            {completedLessons[lesson.id] ? '✓ Completed — head to PPO Quiz →' : 'Mark lesson complete'}
+          </button>
+          {completedLessons[lesson.id] && (
+            <button className="reveal-btn" style={{ marginLeft: '10px' }} onClick={() => onNav('ppoquiz')}>Go to PPO Quiz →</button>
+          )}
+        </section>
+      )}
+
+      <PrevNext current="ppo" onChange={onNav} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// MODULE 17 — PPO QUIZ (10 questions, separate from main quiz)
+// ---------------------------------------------------------------------------
+const PPO_QUIZ_KEY = 'kyt-ppo-quiz-portfolio'
+
+function PPOQuizSection({ onNav }) {
+  const [phase, setPhase] = useState('intro')
+  const [qIndex, setQIndex] = useState(0)
+  const [selected, setSelected] = useState(null)
+  const [locked, setLocked] = useState(false)
+  const [score, setScore] = useState(0)
+  const [answers, setAnswers] = useState([])
+  const [record, setRecord] = useState({ attempts: 0, bestScore: 0 })
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PPO_QUIZ_KEY)
+      if (raw) setRecord(JSON.parse(raw))
+    } catch { /* ignore */ }
+  }, [])
+
+  function startQuiz() {
+    setPhase('active')
+    setQIndex(0)
+    setScore(0)
+    setSelected(null)
+    setLocked(false)
+    setAnswers([])
+  }
+
+  function choose(key) {
+    if (locked) return
+    setSelected(key)
+    setLocked(true)
+    const correct = key === ppoQuizBank[qIndex].correct
+    if (correct) setScore(s => s + 1)
+    setAnswers(a => [...a, { q: ppoQuizBank[qIndex], selected: key, correct }])
+  }
+
+  function next() {
+    if (qIndex + 1 < ppoQuizBank.length) {
+      setQIndex(i => i + 1)
+      setSelected(null)
+      setLocked(false)
+    } else {
+      const finalScore = answers.filter(a => a.correct).length + (selected === ppoQuizBank[qIndex]?.correct ? 1 : 0)
+      const next = { attempts: record.attempts + 1, bestScore: Math.max(record.bestScore, finalScore) }
+      try { localStorage.setItem(PPO_QUIZ_KEY, JSON.stringify(next)) } catch { /* ignore */ }
+      setRecord(next)
+      setPhase('results')
+    }
+  }
+
+  const pct = answers.length > 0 ? Math.round((answers.filter(a => a.correct).length / ppoQuizBank.length) * 100) : 0
+  const finalScore = answers.filter(a => a.correct).length + (phase === 'results' && selected === ppoQuizBank[ppoQuizBank.length - 1]?.correct ? 1 : 0)
+  const missed = answers.filter(a => !a.correct).map(a => a.q.category)
+  const missedCats = [...new Set(missed)]
+
+  if (phase === 'intro') return (
+    <div>
+      <ModuleHeader num="17" title="PPO Plans Quiz"
+        lede="Ten questions covering PPO fundamentals, coverage tiers, waiting periods, fine print, plan matching, and compliance. Separate from the main eligibility quiz — score here shows your PPO product knowledge specifically." />
+
+      {record.attempts > 0 && (
+        <div className="card" style={{ marginBottom: '24px' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.06em' }}>Your PPO quiz record</div>
+          <div style={{ display: 'flex', gap: '24px' }}>
+            <div><div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', color: 'var(--text)' }}>{record.attempts}</div><div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Attempts</div></div>
+            <div><div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', color: 'var(--gold)' }}>{record.bestScore}/10</div><div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Best score</div></div>
+            <div><div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', color: 'var(--teal)' }}>{Math.round((record.bestScore / 10) * 100)}%</div><div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Best %</div></div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '24px' }}>
+        {['PPO Fundamentals', 'Coverage Tiers', 'Waiting Periods', 'Fine Print', 'Plan Matching', 'Compliance'].map(cat => (
+          <span key={cat} className="badge neutral" style={{ fontSize: '11px' }}>{cat}</span>
+        ))}
+      </div>
+
+      <button className="start-btn" onClick={startQuiz}>Start PPO Quiz</button>
+      <PrevNext current="ppoquiz" onChange={onNav} />
+    </div>
+  )
+
+  if (phase === 'active') {
+    const q = ppoQuizBank[qIndex]
+    return (
+      <div>
+        <p className="eyebrow">Module 17 — PPO Quiz</p>
+        <div className="quiz-meta-row">
+          <span>Question {qIndex + 1} of {ppoQuizBank.length}</span>
+          <span>{q?.category}</span>
+          <span>Score {score}</span>
+        </div>
+        <div className="quiz-progress-track">
+          <div className="quiz-progress-fill" style={{ width: `${(qIndex / ppoQuizBank.length) * 100}%` }} />
+        </div>
+        <div className="quiz-card">
+          <p className="quiz-question">{q.prompt}</p>
+          <div className="quiz-options">
+            {q.options.map(opt => {
+              let cls = 'quiz-option'
+              if (locked) {
+                cls += ' locked'
+                if (opt.key === q.correct) cls += ' correct'
+                else if (opt.key === selected) cls += ' incorrect'
+              } else if (selected === opt.key) cls += ' selected'
+              return (
+                <button key={opt.key} className={cls} onClick={() => choose(opt.key)} disabled={locked}>
+                  <span className="opt-key">{opt.key.toUpperCase()}</span>
+                  <span>{opt.text}</span>
+                </button>
+              )
+            })}
+          </div>
+          {locked && (
+            <div className="quiz-feedback">
+              <span className={`verdict ${selected === q.correct ? 'correct' : 'incorrect'}`}>{selected === q.correct ? 'Correct' : 'Not quite'}</span>
+              {q.explanation}
+            </div>
+          )}
+          <div className="quiz-footer">
+            <button className="next-btn" onClick={next} disabled={!locked}>{qIndex + 1 === ppoQuizBank.length ? 'See results' : 'Next question'}</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const finalPct = Math.round((finalScore / ppoQuizBank.length) * 100)
+  const passed = finalPct >= 80
+
+  return (
+    <div>
+      <p className="eyebrow">Module 17 — PPO Quiz Results</p>
+      <h1 className="page-title">PPO Quiz Complete</h1>
+      <div className="card results-card">
+        <div className="results-score">{finalScore}<span>/10</span></div>
+        <span className={`badge ${passed ? 'gold' : finalPct >= 70 ? 'teal' : 'red'} results-tier`}>
+          {passed ? 'PPO Certified-Ready' : finalPct >= 70 ? 'Review Recommended' : 'Retraining Required'}
+        </span>
+        <p className="results-detail">
+          {passed ? 'You can read any plan on the shelf and guide a patient honestly. Keep the cheat sheet at your desk.' : 'Review Lessons 3 and 5 — waiting periods and plan matching are where most points are lost — then retake.'}
+        </p>
+        {missedCats.length > 0 && (
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '8px' }}>Review these areas</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+              {missedCats.map(c => <span key={c} className="badge red" style={{ fontSize: '10px' }}>{c}</span>)}
+            </div>
+          </div>
+        )}
+        <div className="results-actions">
+          <button className="reveal-btn secondary" onClick={startQuiz}>Retake quiz</button>
+          <button className="reveal-btn" onClick={() => onNav('ppo')}>← Back to PPO lessons</button>
+        </div>
+      </div>
+      <PrevNext current="ppoquiz" onChange={onNav} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // App shell
 // ---------------------------------------------------------------------------
 export default function App() {
@@ -1196,6 +1675,8 @@ export default function App() {
         {section === 'quiz'        && <QuizSection onNav={setSection} />}
         {section === 'glossary'    && <GlossarySection onNav={setSection} />}
         {section === 'policy'      && <PolicySection onNav={setSection} />}
+        {section === 'ppo'         && <PPOSection onNav={setSection} />}
+        {section === 'ppoquiz'     && <PPOQuizSection onNav={setSection} />}
       </main>
     </div>
   )
