@@ -11,6 +11,7 @@ import {
   coreRule, riskSignals, internalNote, statusLabels, zocdocSteps,
   chairsideScript, complianceWording, mistakeRecoveryPolicy,
   ppoLessons, ppoPlans, ppoFilters, ppoFilterFns, ppoMatchGuide, ppoQuizBank,
+  kytOsLessons, kytOsPipelineStages,
 } from './data.js'
 
 const SECTIONS = [
@@ -31,6 +32,7 @@ const SECTIONS = [
   { id: 'policy',     label: 'Manager Policy',   num: '15' },
   { id: 'ppo',        label: 'PPO Plans',        num: '16' },
   { id: 'ppoquiz',    label: 'PPO Quiz',         num: '17' },
+  { id: 'kytos',      label: 'KYT OS Guide',     num: '18' },
 ]
 
 const PORTFOLIO_KEY = 'kyt-training-portfolio'
@@ -1633,6 +1635,255 @@ function PPOQuizSection({ onNav }) {
 }
 
 // ---------------------------------------------------------------------------
+// MODULE 18 — KYT OS GUIDE
+// ---------------------------------------------------------------------------
+function KYTOSSection({ onNav }) {
+  const [activeLesson, setActiveLesson] = useState('pipeline')
+
+  const lesson = kytOsLessons.find(l => l.id === activeLesson)
+
+  const toneColor = { gold: 'var(--gold)', teal: 'var(--teal)', red: 'var(--red)', neutral: 'var(--text-dim)' }
+
+  return (
+    <div>
+      <ModuleHeader num="18" title="KYT OS Walkthrough"
+        lede="Visual, field-by-field training on how to use the KYT OS New Patient Intake system. Screenshots of the actual interface — annotated so you know exactly what to click, what to type, and why." />
+
+      <div className="note-box" style={{ marginBottom: '24px' }}>
+        <span className="tag">Training reminder</span>
+        Screenshots show the real KYT OS interface. Numbers in callouts below each image match numbered annotations. Read every callout before moving to the next lesson.
+      </div>
+
+      {/* Lesson tab strip */}
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '28px', borderBottom: '1px solid var(--border)', paddingBottom: '16px' }}>
+        {kytOsLessons.map(l => (
+          <button key={l.id}
+            className={`os-nav-item ${activeLesson === l.id ? 'active' : ''}`}
+            style={{ padding: '8px 13px', fontSize: '12px' }}
+            onClick={() => setActiveLesson(l.id)}>
+            {l.num} · {l.title}
+          </button>
+        ))}
+      </div>
+
+      {lesson && (
+        <div>
+          {/* Lesson header */}
+          <div style={{ marginBottom: '28px' }}>
+            <p className="eyebrow">Lesson {lesson.num} of {kytOsLessons.length}</p>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', color: 'var(--text)', margin: '4px 0 10px', fontWeight: 500 }}>{lesson.title}</h2>
+            <p style={{ fontSize: '14px', color: 'var(--text-dim)', lineHeight: 1.65, maxWidth: '640px' }}>{lesson.lede}</p>
+          </div>
+
+          {/* Single screenshot */}
+          {lesson.screenshot && (
+            <section className="panel">
+              <h2 className="section-title">Interface Reference</h2>
+              <div style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '20px' }}>
+                <img
+                  src={lesson.screenshot}
+                  alt={lesson.screenshotAlt}
+                  style={{ width: '100%', display: 'block', maxHeight: '520px', objectFit: 'contain', objectPosition: 'top' }}
+                  onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
+                />
+                <div style={{ display: 'none', padding: '32px', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', color: 'var(--text-faint)', fontSize: '13px' }}>
+                  <span style={{ fontSize: '28px' }}>🖼</span>
+                  <span>{lesson.screenshotAlt}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>{lesson.screenshot}</span>
+                </div>
+              </div>
+
+              {/* Callouts */}
+              {lesson.callouts && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {lesson.callouts.map(c => (
+                    <div key={c.num} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '12px 14px' }}>
+                      <div style={{ flex: '0 0 28px', height: '28px', background: 'var(--gold)', color: 'var(--bg)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700, flexShrink: 0 }}>{c.num}</div>
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{c.label}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.6 }}>{c.detail}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Multiple screenshots (ortho lesson) */}
+          {lesson.screenshots && (
+            <section className="panel">
+              <h2 className="section-title">Interface Reference</h2>
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                {lesson.screenshots.map((ss, i) => (
+                  <div key={i} style={{ flex: '1 1 280px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+                    <img src={ss.src} alt={ss.alt} style={{ width: '100%', display: 'block', maxHeight: '200px', objectFit: 'contain', objectPosition: 'top' }}
+                      onError={e => { e.target.style.display = 'none' }} />
+                    <div style={{ padding: '10px 14px', borderTop: '1px solid var(--border)', fontSize: '11px', color: 'var(--text-faint)', fontFamily: 'var(--font-mono)' }}>{ss.caption}</div>
+                  </div>
+                ))}
+              </div>
+              {lesson.callouts && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {lesson.callouts.map(c => (
+                    <div key={c.num} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '12px 14px' }}>
+                      <div style={{ flex: '0 0 28px', height: '28px', background: 'var(--gold)', color: 'var(--bg)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700, flexShrink: 0 }}>{c.num}</div>
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--gold)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '.04em' }}>{c.label}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.6 }}>{c.detail}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Rules */}
+          {lesson.rules && (
+            <section className="panel">
+              <h2 className="section-title">Rules for this lesson</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {lesson.rules.map((r, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '12px', padding: '11px 14px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', alignItems: 'flex-start' }}>
+                    <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '13px', flexShrink: 0, marginTop: '1px' }}>→</span>
+                    <span style={{ fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.6 }}>{r}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Source rules (lesson 04) */}
+          {lesson.sourceRules && (
+            <section className="panel">
+              <h2 className="section-title">Source-by-source intake rules</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {lesson.sourceRules.map(sr => (
+                  <div key={sr.source} className="card">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                      <span className={`badge ${sr.tone}`} style={{ fontSize: '13px', padding: '5px 12px' }}>{sr.source}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)' }}>Start stage: {sr.startStage}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)' }}>Contact by: {sr.contactTarget}</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                      {sr.notes.map((n, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '10px', fontSize: '13px', color: 'var(--text-dim)', lineHeight: 1.55 }}>
+                          <span style={{ color: 'var(--teal)', flexShrink: 0, fontFamily: 'var(--font-mono)' }}>·</span>
+                          {n}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Insurance status guide (lesson 06) */}
+          {lesson.statusGuide && (
+            <section className="panel">
+              <h2 className="section-title">Status decision guide</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {lesson.statusGuide.map(sg => (
+                  <div key={sg.status} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                      <span className={`badge ${sg.tone}`}>{sg.status}</span>
+                    </div>
+                    <div style={{ fontSize: '12.5px', color: 'var(--text-dim)', marginBottom: '6px', lineHeight: 1.55 }}><strong style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.05em' }}>Use when: </strong>{sg.when}</div>
+                    <div style={{ fontSize: '12.5px', color: 'var(--text-dim)', lineHeight: 1.55 }}><strong style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.05em' }}>Then: </strong>{sg.action}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Good/bad comments examples (lesson 08) */}
+          {lesson.goodExamples && (
+            <section className="panel">
+              <h2 className="section-title" style={{ color: 'var(--teal)' }}>✓ Good comment examples</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+                {lesson.goodExamples.map((ex, i) => (
+                  <div key={i} style={{ padding: '12px 16px', background: 'rgba(79,158,152,0.07)', border: '1px solid rgba(79,158,152,0.3)', borderRadius: 'var(--radius-sm)', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+                    "{ex}"
+                  </div>
+                ))}
+              </div>
+              <h2 className="section-title" style={{ color: 'var(--red)' }}>✗ What NOT to write</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {lesson.badExamples.map((ex, i) => (
+                  <div key={i} style={{ padding: '12px 16px', background: 'rgba(194,100,95,0.07)', border: '1px solid rgba(194,100,95,0.3)', borderRadius: 'var(--radius-sm)' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--red)', marginBottom: '5px' }}>"{ex.bad}"</div>
+                    <div style={{ fontSize: '12.5px', color: 'var(--text-dim)', lineHeight: 1.5 }}>Why it fails: {ex.why}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Pipeline stages reference (first pipeline lesson) */}
+          {lesson.id === 'pipeline' && (
+            <section className="panel">
+              <h2 className="section-title">All pipeline stages at a glance</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {kytOsPipelineStages.map(ps => (
+                  <div key={ps.stage} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                      <span className={`badge ${ps.tone}`}>{ps.stage}</span>
+                      {ps.reasons && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)' }}>Requires archive reason</span>}
+                    </div>
+                    <p style={{ fontSize: '13px', color: 'var(--text)', marginBottom: '10px', lineHeight: 1.5 }}>{ps.meaning}</p>
+                    {ps.countsAs && (
+                      <div style={{ marginBottom: '8px' }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '5px' }}>Counts as this stage</div>
+                        {ps.countsAs.map((c, i) => <div key={i} style={{ fontSize: '12.5px', color: 'var(--text-dim)', paddingLeft: '10px', lineHeight: 1.55 }}>· {c}</div>)}
+                      </div>
+                    )}
+                    {ps.doesNotCountAs && (
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '5px' }}>Does NOT count</div>
+                        {ps.doesNotCountAs.map((c, i) => <div key={i} style={{ fontSize: '12.5px', color: 'var(--text-dim)', paddingLeft: '10px', lineHeight: 1.55 }}>· {c}</div>)}
+                      </div>
+                    )}
+                    {ps.reasons && (
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '5px' }}>Valid archive reasons</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                          {ps.reasons.map(r => <span key={r} className="badge neutral" style={{ fontSize: '10px' }}>{r}</span>)}
+                        </div>
+                      </div>
+                    )}
+                    <div style={{ marginTop: '10px', fontSize: '12px', color: 'var(--gold)', fontFamily: 'var(--font-mono)' }}>Next → {ps.nextAction}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Lesson navigation */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '36px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
+            {kytOsLessons.findIndex(l => l.id === activeLesson) > 0 ? (
+              <button className="reveal-btn secondary" onClick={() => setActiveLesson(kytOsLessons[kytOsLessons.findIndex(l => l.id === activeLesson) - 1].id)}>
+                ← Previous lesson
+              </button>
+            ) : <div />}
+            {kytOsLessons.findIndex(l => l.id === activeLesson) < kytOsLessons.length - 1 ? (
+              <button className="reveal-btn" onClick={() => setActiveLesson(kytOsLessons[kytOsLessons.findIndex(l => l.id === activeLesson) + 1].id)}>
+                Next lesson →
+              </button>
+            ) : (
+              <button className="reveal-btn" onClick={() => onNav('pipeline')}>← Back to start</button>
+            )}
+          </div>
+        </div>
+      )}
+
+      <PrevNext current="kytos" onChange={onNav} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // App shell
 // ---------------------------------------------------------------------------
 export default function App() {
@@ -1677,6 +1928,7 @@ export default function App() {
         {section === 'policy'      && <PolicySection onNav={setSection} />}
         {section === 'ppo'         && <PPOSection onNav={setSection} />}
         {section === 'ppoquiz'     && <PPOQuizSection onNav={setSection} />}
+        {section === 'kytos'       && <KYTOSSection onNav={setSection} />}
       </main>
     </div>
   )
