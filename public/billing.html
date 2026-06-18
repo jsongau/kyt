@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KYT OS — Billing (Stedi) · Prototype</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F0E5; --paper-2:#EFE8D9; --card:#FCFAF4;
+  --ink:#21302A; --ink-soft:#3A4A42;
+  --green:#2E5E45; --green-d:#234A37; --green-l:#5C7A66;
+  --sage:#E6EDE3; --muted:#6E7268; --line:#E3DAC8; --line-2:#D8CDB6;
+  --gold:#C0902E; --rust:#B0542E; --amber:#8A6516;
+  --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+  --shadow:0 1px 0 rgba(33,48,42,.03),0 12px 34px rgba(33,48,42,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.12;margin:0;letter-spacing:-.01em}
+a{color:inherit}
+button{font-family:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+
+/* sidebar */
+.side{background:var(--panel,#21302A);background:linear-gradient(180deg,#21302A,#1b2721);color:#E7EDE6;padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+.side .brand{display:flex;align-items:center;gap:11px;padding:6px 8px 18px}
+.side .brand .lg{width:34px;height:34px;border-radius:9px;background:var(--green);display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:17px;color:#F4EFE2}
+.side .brand b{font-family:var(--serif);font-weight:600;font-size:16px;display:block;line-height:1.1}
+.side .brand span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9FB4A6}
+.side .sec{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7E9285;margin:16px 8px 6px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:13.5px;font-weight:500;color:#CDD8CF;cursor:pointer;border:0;background:none;width:100%;text-align:left;transition:.12s}
+.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav.on{background:var(--green);color:#fff}
+.nav .ic{width:16px;height:16px;flex:0 0 16px;opacity:.9}
+.nav .ct{margin-left:auto;font-size:11px;background:rgba(255,255,255,.14);border-radius:20px;padding:1px 7px;font-weight:600}
+.side .foot{margin-top:auto;font-size:10.5px;color:#7E9285;padding:10px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,.08)}
+
+/* main */
+.main{padding:0;overflow:auto}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(245,240,229,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:16px 30px;display:flex;align-items:center;gap:16px}
+.topbar h1{font-size:23px}
+.topbar .sub{font-size:12.5px;color:var(--muted)}
+.topbar .demo{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);background:#F6ECD6;border:1px solid #E8D6A8;border-radius:20px;padding:5px 12px}
+.view{padding:26px 30px 60px;max-width:1100px}
+.muted{color:var(--muted)}
+
+/* six-question banner */
+.sixq{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 24px}
+.sq{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.sq .l{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.sq .v{font-size:12.5px;color:var(--ink);line-height:1.35;min-height:32px}
+@media(max-width:1000px){.sixq{grid-template-columns:repeat(3,1fr)}}
+
+/* generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:18px}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.col{flex:1;min-width:260px}
+label.fld{display:block;margin-bottom:13px}
+label.fld .lab{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+input,select{width:100%;font-family:var(--sans);font-size:14px;padding:10px 12px;border:1px solid var(--line-2);border-radius:9px;background:var(--paper-2);color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(46,94,69,.12)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;border-radius:999px;padding:11px 20px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.btn-green{background:var(--green);color:#F4EFE2}
+.btn-green:hover{background:var(--green-d)}
+.btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.h-sec{margin:0 0 4px;font-size:24px}
+.lede{color:var(--ink-soft);font-size:15px;margin:0 0 22px;max-width:70ch}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px}
+.b-green{background:var(--sage);color:var(--green-d)}
+.b-red{background:#F3E0D6;color:var(--rust)}
+.b-amber{background:#F6ECD6;color:var(--amber)}
+.b-gray{background:var(--paper-2);color:var(--muted)}
+.b-blue{background:#E4EAF2;color:#3A5680}
+
+/* eligibility result */
+.cov-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.cov-head h3{font-size:22px}
+.plan-chip{font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px}
+.benefits{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}
+.benefits th,.benefits td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+.benefits th{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--paper-2)}
+.benefits td .v{font-weight:600}
+.warn-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.warn-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;padding:11px 13px;border-radius:10px;line-height:1.4}
+.warn-red{background:#F7E7DD;color:#7c331a}
+.warn-amber{background:#F8EFD8;color:#6b4e12}
+.warn-green{background:var(--sage);color:var(--green-d)}
+
+/* preflight meter */
+.pf{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.pf-dial{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;position:relative;flex:0 0 118px}
+.pf-dial .n{font-family:var(--serif);font-size:34px;line-height:1}
+.pf-dial .b{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-top:2px}
+.pf-info{flex:1;min-width:240px}
+.pf-band{font-family:var(--serif);font-size:22px;margin-bottom:4px}
+.issues{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.issues li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.4}
+.issues .mk{flex:0 0 18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;margin-top:1px}
+.mk.pass{background:var(--green)} .mk.warn{background:var(--gold)} .mk.fail{background:var(--rust)}
+
+/* claim builder lines */
+.line-add{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.line-add .fld{flex:1;min-width:110px;margin:0}
+.chk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.chk{display:flex;align-items:center;gap:9px;font-size:13px;padding:9px 11px;border:1px solid var(--line-2);border-radius:9px;background:var(--paper-2);cursor:pointer}
+.chk input{width:auto}
+.chk.on{border-color:var(--green);background:var(--sage)}
+.lines-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.lines-tbl th,.lines-tbl td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+.lines-tbl th{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px}
+.x:hover{color:var(--rust)}
+
+/* tracker */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.chip{border:1px solid var(--line-2);background:var(--card);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--green);color:#fff;border-color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{text-align:left;padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--paper-2)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr:hover td{background:#FBF7EE}
+.st{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.age{font-weight:700}
+.age.a0{color:var(--green-d)} .age.a30{color:var(--amber)} .age.a60{color:var(--rust)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+
+/* era */
+.era-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.era-cell{background:var(--card);padding:14px 16px}
+.era-cell .l{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.era-cell .v{font-family:var(--serif);font-size:21px;margin-top:3px}
+.era-cell .v.pos{color:var(--green-d)} .era-cell .v.neg{color:var(--rust)}
+.codes{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.6}
+.codes code{background:var(--paper-2);padding:1px 6px;border-radius:5px;font-size:11.5px}
+
+.note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.55;border-top:1px solid var(--line);padding-top:14px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-d);color:#F4EFE2;padding:12px 20px;border-radius:999px;font-size:13.5px;font-weight:600;opacity:0;transition:.3s;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:780px){.app{grid-template-columns:1fr}.side{flex-direction:row;flex-wrap:wrap;align-items:center}.side .sec,.side .foot,.side .brand span{display:none}.era-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="brand">
+      <div class="lg">K</div>
+      <div><b>KYT OS</b><span>Billing</span></div>
+    </div>
+    <div class="sec">Billing on Stedi</div>
+    <button class="nav on" data-view="eligibility"><span class="ic">◷</span> Eligibility Station</button>
+    <button class="nav" data-view="builder"><span class="ic">＋</span> New Claim</button>
+    <button class="nav" data-view="tracker"><span class="ic">▤</span> Claims Tracker <span class="ct" id="navTrackerCt">0</span></button>
+    <button class="nav" data-view="era"><span class="ic">＄</span> ERA / Payments</button>
+    <div class="sec">Existing modules</div>
+    <button class="nav" data-stub="Dashboard"><span class="ic">▦</span> Dashboard</button>
+    <button class="nav" data-stub="Insurance Ledger"><span class="ic">▤</span> Insurance Ledger</button>
+    <button class="nav" data-stub="Messaging"><span class="ic">✉</span> Messaging</button>
+    <div class="foot">Prototype · mock data.<br>Real Stedi 270/271, 837D &amp; 835 wire in via the backend (see API_ARCHITECTURE.md).</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="topTitle">Eligibility Station</h1>
+        <div class="sub" id="topSub">Verify coverage before the patient is in the chair · Stedi 270 → 271</div>
+      </div>
+      <span class="demo">Prototype · mock data</span>
+    </div>
+    <div class="view" id="view"></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ MOCK DATA ============ */
+const PAYERS = {
+  guardian:  {name:'Guardian',         stediId:'64246', type:'PPO',
+    annualMax:150000, remaining:118000, deductible:5000, dedMet:5000,
+    cov:{Preventive:'100%',Basic:'80%',Major:'50%',Ortho:'50% (child <19)'},
+    waits:{Preventive:'None',Basic:'None',Major:'12 months',Ortho:'12 months'},
+    freq:{'Cleanings/Exams':'2×/yr (next eligible 09/2026)','Bitewings':'1×/yr','Pano':'every 3 yrs'},
+    missingTooth:true, active:true},
+  delta:     {name:'Delta Dental',     stediId:'CDCA1', type:'PPO',
+    annualMax:200000, remaining:200000, deductible:5000, dedMet:0,
+    cov:{Preventive:'100%',Basic:'80%',Major:'50%',Ortho:'50% (adult + child)'},
+    waits:{Preventive:'None',Basic:'6 months',Major:'12 months',Ortho:'12 months'},
+    freq:{'Cleanings/Exams':'2×/yr','Bitewings':'1×/yr','FMX':'every 5 yrs'},
+    missingTooth:true, active:true},
+  uhc:       {name:'UnitedHealthcare', stediId:'52133', type:'PPO',
+    annualMax:100000, remaining:64000, deductible:5000, dedMet:5000,
+    cov:{Preventive:'100%',Basic:'50%',Major:'Not covered',Ortho:'Not covered'},
+    waits:{Preventive:'None',Basic:'None',Major:'—',Ortho:'—'},
+    freq:{'Cleanings/Exams':'2×/yr','Bitewings':'1×/yr'},
+    missingTooth:false, active:true, age64:true},
+  aetna:     {name:'Aetna',            stediId:'60054', type:'PPO',
+    annualMax:125000, remaining:90000, deductible:5000, dedMet:2500,
+    cov:{Preventive:'100%',Basic:'80%',Major:'50%',Ortho:'Not covered'},
+    waits:{Preventive:'None',Basic:'6 months',Major:'12 months',Ortho:'—'},
+    freq:{'Cleanings/Exams':'2×/yr','Bitewings':'1×/yr'},
+    missingTooth:true, active:true},
+  liberty:   {name:'Liberty Dental (DMO)', stediId:'CX083', type:'DMO',
+    annualMax:0, remaining:0, deductible:0, dedMet:0,
+    cov:{Preventive:'Copay $0',Basic:'Fixed copay',Major:'Fixed copay',Ortho:'Copay schedule'},
+    waits:{Preventive:'None',Basic:'None',Major:'None',Ortho:'None'},
+    freq:{'Cleanings/Exams':'Per assigned office'},
+    missingTooth:false, active:true, capitation:true},
+  inactive:  {name:'MetLife (termed)', stediId:'65978', type:'PPO',
+    active:false}
+};
+const CDT = {
+  D1110:{d:'Prophylaxis (cleaning)',tooth:false,surface:false,narrative:false,xray:false,perio:false,fee:11000},
+  D0274:{d:'Bitewings - four films',tooth:false,surface:false,narrative:false,xray:false,perio:false,fee:7500},
+  D2740:{d:'Crown - porcelain/ceramic',tooth:true,surface:false,narrative:true,xray:true,perio:false,fee:130000},
+  D2950:{d:'Core build-up',tooth:true,surface:false,narrative:true,xray:true,perio:false,fee:35000},
+  D3330:{d:'Root canal - molar',tooth:true,surface:false,narrative:true,xray:true,perio:false,fee:140000},
+  D4341:{d:'Scaling/root planing (quad)',tooth:false,surface:false,narrative:true,xray:true,perio:true,fee:32000},
+  D7140:{d:'Extraction',tooth:true,surface:false,narrative:true,xray:true,perio:false,fee:25000},
+  D2391:{d:'Resin composite - 1 surface',tooth:true,surface:true,narrative:false,xray:false,perio:false,fee:22000}
+};
+const STATUS_COLORS = {
+  'Draft':'b-gray','Ready to Bill':'b-blue','Pre-Flight Failed':'b-red','Submitted':'b-blue',
+  'Accepted by Stedi':'b-green','Accepted by Payer':'b-green','Pending Payer':'b-amber',
+  'Paid':'b-green','Partially Paid':'b-amber','Denied':'b-red','Not Paid':'b-red',
+  'ERA Received':'b-green','Rebill Needed':'b-amber','Appeal Needed':'b-red'
+};
+
+/* seed a couple of tracker claims so it isn't empty */
+const SEED = [
+  {id:'KYT-10231', patient:'Robert Sato', payer:'Guardian', code:'D2740', tooth:'14', charge:130000,
+   status:'Pending Payer', submitted:daysAgo(34), pcn:'a7Kd92mXr... ', ref:'GRD-558210',
+   nextAction:'Call payer — past 30 days', followUp:'today', staff:'Maria'},
+  {id:'KYT-10228', patient:'Lena Pham', payer:'Delta Dental', code:'D3330', tooth:'30', charge:140000,
+   status:'Paid', submitted:daysAgo(12), pcn:'b3Lp01...', ref:'DDC-771039',
+   nextAction:'Post ERA — done', followUp:'—', staff:'Maria'},
+  {id:'KYT-10219', patient:'Marcus Webb', payer:'UnitedHealthcare', code:'D7140', tooth:'1', charge:25000,
+   status:'Denied', submitted:daysAgo(63), pcn:'c9Qm44...', ref:'UHC-330021',
+   nextAction:'Appeal — missing-tooth not applicable', followUp:'tomorrow', staff:'Devon'}
+];
+
+/* ============ STATE ============ */
+const KEY='kyt:billing:v1';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+let state = load() || {claims: SEED.slice(), lastElig:null, builder:freshBuilder()};
+if(!state.builder) state.builder = freshBuilder();
+function freshBuilder(){return {patient:'',payer:'guardian',dos:today(),provider:'Dr. Isaac Sun (NPI 1999999992)',lines:[],attachments:{xray:false,perio:false,photo:false,eob:false},narrative:false,signed:false};}
+function persist(){save(state)}
+
+/* ============ HELPERS ============ */
+function today(){return new Date().toISOString().slice(0,10)}
+function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10)}
+function ageOf(dateStr){const d=(Date.now()-new Date(dateStr).getTime())/86400000;return Math.floor(d)}
+function money(c){return '$'+(c/100).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstChild}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._k);t._k=setTimeout(()=>t.classList.remove('show'),2200)}
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+
+/* ============ ROUTER ============ */
+const TITLES={
+  eligibility:['Eligibility Station','Verify coverage before the patient is in the chair · Stedi 270 → 271'],
+  builder:['New Claim','Build an 837D dental claim with live Pre-Flight readiness'],
+  tracker:['Claims Tracker','Every claim, its status, owner, and next follow-up'],
+  era:['ERA / Payments','Match the 835, see the breakdown, decide the next action']
+};
+function go(view){
+  $$('.nav').forEach(n=>n.classList.toggle('on',n.dataset.view===view));
+  const [t,s]=TITLES[view]||['',''];
+  $('#topTitle').textContent=t; $('#topSub').textContent=s;
+  $('#navTrackerCt').textContent=state.claims.length;
+  if(view==='eligibility')renderEligibility();
+  else if(view==='builder')renderBuilder();
+  else if(view==='tracker')renderTracker();
+  else if(view==='era')renderEra();
+  try{window.scrollTo&&window.scrollTo(0,0)}catch(e){}
+}
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('.nav');
+  if(nav){ if(nav.dataset.view)go(nav.dataset.view); else if(nav.dataset.stub)toast(nav.dataset.stub+' — existing KYT OS module (not part of this prototype)'); }
+});
+
+/* ============ SIX-QUESTION BANNER ============ */
+function sixq(o){
+  const items=[['Missing',o.missing],['Risky',o.risky],['Do now',o.now],['Last',o.last],['Follow up',o.follow],['Who',o.who]];
+  return '<div class="sixq">'+items.map(([l,v])=>`<div class="sq"><div class="l">${l}</div><div class="v">${v||'—'}</div></div>`).join('')+'</div>';
+}
+
+/* ============ VIEW: ELIGIBILITY ============ */
+function renderEligibility(){
+  const v=$('#view');
+  v.innerHTML=`
+    <div class="card">
+      <div class="eyebrow">Stedi 270 request</div>
+      <h2 class="h-sec" style="margin:6px 0 16px">Run an eligibility check</h2>
+      <div class="row">
+        <div class="col">
+          <label class="fld"><span class="lab">Patient name</span><input id="e_name" value="Robert Sato"></label>
+          <label class="fld"><span class="lab">Patient DOB</span><input id="e_dob" value="1962-03-11" type="date"></label>
+          <label class="fld"><span class="lab">Member ID</span><input id="e_mid" value="123412345"></label>
+        </div>
+        <div class="col">
+          <label class="fld"><span class="lab">Payer</span><select id="e_payer">
+            ${Object.entries(PAYERS).map(([k,p])=>`<option value="${k}">${p.name}</option>`).join('')}
+          </select></label>
+          <label class="fld"><span class="lab">Provider NPI</span><input id="e_npi" value="1999999992"></label>
+          <label class="fld"><span class="lab">Office Tax ID</span><input id="e_tin" value="12-3456789"></label>
+        </div>
+      </div>
+      <button class="btn btn-green" id="e_run">Run eligibility via Stedi →</button>
+      <div class="note">In production this calls <code>POST /api/eligibility/check</code> → Stedi 270/271 (server-side key). Here it returns mock benefits so you can see the screen.</div>
+    </div>
+    <div id="e_result" style="margin-top:18px"></div>`;
+  $('#e_run').addEventListener('click',()=>{
+    const k=$('#e_payer').value, name=$('#e_name').value;
+    state.lastElig={payer:k,name,at:new Date().toLocaleString()}; persist();
+    showEligibility(k,name);
+    toast('271 received — parsed '+PAYERS[k].name);
+  });
+  if(state.lastElig){ showEligibility(state.lastElig.payer, state.lastElig.name); }
+}
+function detectPlan(p){
+  if(!p.active) return {chip:'INACTIVE',cls:'b-red',msg:'Coverage inactive/terminated — do not schedule against this plan.'};
+  if(p.type==='DMO'||p.capitation) return {chip:p.type+' · CAPITATION',cls:'b-red',msg:'Managed-care/capitation plan — KYT may be out-of-network. Confirm the patient\'s assigned office before treating.'};
+  if(p.type==='PPO') return {chip:'PPO',cls:'b-green',msg:'PPO active — proceed normally.'};
+  return {chip:'VERIFY',cls:'b-amber',msg:'Plan type unclear — verify manually before promising coverage.'};
+}
+function showEligibility(k,name){
+  const p=PAYERS[k]; const det=detectPlan(p); const wrap=$('#e_result');
+  if(!p.active){
+    wrap.innerHTML=sixq({missing:'—',risky:'<b>Coverage INACTIVE</b>',now:'Do not bill; ask patient for current plan',last:'Checked just now',follow:'—',who:'You'})+
+    `<div class="card"><div class="cov-head"><h3>${p.name}</h3><span class="plan-chip ${det.cls}">${det.chip}</span></div>
+     <p class="muted">Stedi ID ${p.stediId} · Member not active as of ${today()}.</p>
+     <ul class="warn-list"><li class="warn-red">⛔ ${det.msg}</li></ul></div>`;
+    return;
+  }
+  const warnings=[];
+  if(det.cls==='b-red') warnings.push(['warn-red','⛔ '+det.msg]);
+  if(p.missingTooth) warnings.push(['warn-amber','⚠ Missing-tooth clause present — confirm extraction dates before quoting implant/bridge.']);
+  if(p.remaining!=null && p.annualMax && p.remaining < p.annualMax*0.25) warnings.push(['warn-amber','⚠ Annual maximum nearly exhausted ('+money(p.remaining)+' left).']);
+  if(p.age64) warnings.push(['warn-amber','⚠ Plan covers ages ≤64 — verify patient age.']);
+  if(det.cls==='b-green' && !warnings.length) warnings.push(['warn-green','✓ PPO active, benefits available — clear to proceed.']);
+
+  const benefitRows = p.type==='DMO'
+    ? Object.entries(p.cov).map(([k2,v])=>`<tr><td>${k2}</td><td class="v">${v}</td><td>${p.waits[k2]||'—'}</td></tr>`).join('')
+    : Object.keys(p.cov).map(c=>`<tr><td>${c}</td><td class="v">${p.cov[c]}</td><td>${p.waits[c]||'—'}</td></tr>`).join('');
+
+  wrap.innerHTML =
+    sixq({
+      missing: p.type==='DMO'?'Assigned-office confirmation':'Nothing — benefits returned',
+      risky: det.cls==='b-red'?'<b>HMO/DMO — out-of-network risk</b>':(p.missingTooth?'Missing-tooth clause':'Low'),
+      now: det.cls==='b-red'?'Confirm assigned office':'Proceed; verify frequencies',
+      last:'Eligibility checked just now',
+      follow: p.remaining&&p.remaining<p.annualMax*0.25?'Watch annual max':'Re-check before next DOS',
+      who: 'You'
+    })+
+    `<div class="card">
+      <div class="cov-head">
+        <div class="eyebrow">Coverage summary</div>
+      </div>
+      <div class="cov-head" style="margin-top:6px">
+        <h3>${p.name} — ${name}</h3>
+        <span class="plan-chip ${det.cls}">${det.chip}</span>
+        <span class="badge b-green">Active</span>
+      </div>
+      <p class="muted" style="margin:2px 0 14px">Stedi payer ID ${p.stediId} · as of ${today()}</p>
+      ${p.type!=='DMO'?`<div class="era-grid" style="margin-bottom:18px">
+        <div class="era-cell"><div class="l">Annual maximum</div><div class="v">${money(p.annualMax)}</div></div>
+        <div class="era-cell"><div class="l">Remaining</div><div class="v pos">${money(p.remaining)}</div></div>
+        <div class="era-cell"><div class="l">Deductible</div><div class="v">${money(p.deductible)} <span style="font-size:12px;color:var(--muted)">(${p.dedMet>=p.deductible?'met':money(p.deductible-p.dedMet)+' left'})</span></div></div>
+      </div>`:''}
+      <h4 style="font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 6px">Benefit breakdown</h4>
+      <table class="benefits"><thead><tr><th>Category</th><th>Coverage</th><th>Waiting period</th></tr></thead><tbody>${benefitRows}</tbody></table>
+      <h4 style="font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:20px 0 6px">Frequency limits</h4>
+      <table class="benefits"><tbody>${Object.entries(p.freq).map(([k2,v])=>`<tr><td>${k2}</td><td class="v">${v}</td></tr>`).join('')}</tbody></table>
+    </div>
+    <div class="card">
+      <h4 style="font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px">Warnings &amp; plan-type detection</h4>
+      <ul class="warn-list">${warnings.map(([c,m])=>`<li class="${c}">${m}</li>`).join('')}</ul>
+      <div class="note"><b>KYT rule:</b> active never auto-means active PPO — every check runs HMO/DMO/capitation detection. Try the "Liberty Dental (DMO)" or "MetLife (termed)" payer to see the red flags.</div>
+    </div>`;
+}
+
+/* ============ VIEW: CLAIM BUILDER ============ */
+function renderBuilder(){
+  const b=state.builder, v=$('#view');
+  v.innerHTML=`
+    <div class="row">
+      <div class="col" style="flex:1.4">
+        <div class="card">
+          <div class="eyebrow">837D · claim builder</div>
+          <h2 class="h-sec" style="margin:6px 0 16px">Claim details</h2>
+          <div class="row">
+            <div class="col"><label class="fld"><span class="lab">Patient</span><input id="b_pat" placeholder="Patient name" value="${b.patient}"></label></div>
+            <div class="col"><label class="fld"><span class="lab">Payer</span><select id="b_payer">${Object.entries(PAYERS).filter(([k,p])=>p.active!==false).map(([k,p])=>`<option value="${k}" ${b.payer===k?'selected':''}>${p.name}</option>`).join('')}</select></label></div>
+          </div>
+          <div class="row">
+            <div class="col"><label class="fld"><span class="lab">Date of service</span><input id="b_dos" type="date" value="${b.dos}"></label></div>
+            <div class="col"><label class="fld"><span class="lab">Rendering provider</span><input id="b_prov" value="${b.provider}"></label></div>
+          </div>
+
+          <h4 style="font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Procedure lines</h4>
+          <div class="line-add">
+            <label class="fld"><span class="lab">CDT code</span><select id="l_code">${Object.entries(CDT).map(([c,m])=>`<option value="${c}">${c} — ${m.d}</option>`).join('')}</select></label>
+            <label class="fld" style="max-width:90px"><span class="lab">Tooth</span><input id="l_tooth" placeholder="#"></label>
+            <label class="fld" style="max-width:90px"><span class="lab">Surface</span><input id="l_surf" placeholder="MOD"></label>
+            <button class="btn btn-ghost btn-sm" id="l_add">Add line</button>
+          </div>
+          <table class="lines-tbl"><thead><tr><th>Code</th><th>Description</th><th>Tooth</th><th>Fee</th><th></th></tr></thead>
+            <tbody id="l_body"></tbody></table>
+
+          <h4 style="font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Attachments &amp; narrative</h4>
+          <div class="chk-grid">
+            <label class="chk" id="ck_xray"><input type="checkbox" ${b.attachments.xray?'checked':''}> X-ray (PA/BW) attached</label>
+            <label class="chk" id="ck_perio"><input type="checkbox" ${b.attachments.perio?'checked':''}> Perio chart attached</label>
+            <label class="chk" id="ck_photo"><input type="checkbox" ${b.attachments.photo?'checked':''}> Intraoral photo</label>
+            <label class="chk" id="ck_eob"><input type="checkbox" ${b.attachments.eob?'checked':''}> Primary EOB (secondary claims)</label>
+            <label class="chk" id="ck_narr"><input type="checkbox" ${b.narrative?'checked':''}> Narrative written</label>
+            <label class="chk" id="ck_sign"><input type="checkbox" ${b.signed?'checked':''}> Provider sign-off</label>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="flex:1">
+        <div class="card" id="pf_card"></div>
+        <div class="card" id="sixq_card" style="padding:16px"></div>
+      </div>
+    </div>`;
+
+  // wire inputs
+  $('#b_pat').addEventListener('input',e=>{b.patient=e.target.value;persist();refreshPF()});
+  $('#b_payer').addEventListener('change',e=>{b.payer=e.target.value;persist();refreshPF()});
+  $('#b_dos').addEventListener('change',e=>{b.dos=e.target.value;persist();refreshPF()});
+  $('#b_prov').addEventListener('input',e=>{b.provider=e.target.value;persist();refreshPF()});
+  $('#l_add').addEventListener('click',()=>{
+    const code=$('#l_code').value, tooth=$('#l_tooth').value.trim(), surf=$('#l_surf').value.trim();
+    b.lines.push({code,tooth,surf,fee:CDT[code].fee}); persist();
+    $('#l_tooth').value='';$('#l_surf').value='';
+    renderLines(); refreshPF();
+  });
+  [['ck_xray','xray'],['ck_perio','perio'],['ck_photo','photo'],['ck_eob','eob']].forEach(([id,key])=>{
+    $('#'+id).querySelector('input').addEventListener('change',e=>{b.attachments[key]=e.target.checked;$('#'+id).classList.toggle('on',e.target.checked);persist();refreshPF()});
+    $('#'+id).classList.toggle('on',b.attachments[key]);
+  });
+  $('#ck_narr').querySelector('input').addEventListener('change',e=>{b.narrative=e.target.checked;$('#ck_narr').classList.toggle('on',e.target.checked);persist();refreshPF()});
+  $('#ck_narr').classList.toggle('on',b.narrative);
+  $('#ck_sign').querySelector('input').addEventListener('change',e=>{b.signed=e.target.checked;$('#ck_sign').classList.toggle('on',e.target.checked);persist();refreshPF()});
+  $('#ck_sign').classList.toggle('on',b.signed);
+  renderLines(); refreshPF();
+}
+function renderLines(){
+  const b=state.builder, body=$('#l_body'); if(!body)return;
+  if(!b.lines.length){body.innerHTML='<tr><td colspan="5" class="muted" style="padding:14px">No lines yet — add a procedure above.</td></tr>';return;}
+  body.innerHTML=b.lines.map((l,i)=>`<tr><td><b>${l.code}</b></td><td>${CDT[l.code].d}</td><td>${l.tooth||'<span class="muted">—</span>'}</td><td>${money(l.fee)}</td><td><button class="x" data-rm="${i}">✕</button></td></tr>`).join('');
+  body.querySelectorAll('[data-rm]').forEach(btn=>btn.addEventListener('click',()=>{b.lines.splice(+btn.dataset.rm,1);persist();renderLines();refreshPF()}));
+}
+function preflight(b){
+  const issues=[]; let hardFail=false;
+  const push=(sev,msg,hard)=>{issues.push({sev,msg});if(hard)hardFail=true};
+  // identity
+  b.patient.trim()?push('pass','Patient selected'):push('fail','Patient name missing',true);
+  PAYERS[b.payer]?push('pass','Payer ID selected ('+PAYERS[b.payer].stediId+')'):push('fail','Payer ID missing',true);
+  b.provider.trim()?push('pass','Rendering provider + NPI present'):push('fail','Provider NPI missing',true);
+  b.dos?push('pass','Date of service valid'):push('fail','Date of service missing',true);
+  // lines
+  if(!b.lines.length){push('fail','No procedure lines',true);}
+  else{
+    push('pass',b.lines.length+' procedure line(s) with fees');
+    b.lines.forEach(l=>{
+      const m=CDT[l.code];
+      if(m.tooth && !l.tooth) push('fail','Tooth number required for '+l.code,true);
+      if(m.xray && !b.attachments.xray) push('warn','X-ray recommended for '+l.code+' (attach PA/BW)');
+      if(m.perio && !b.attachments.perio) push('fail','Perio chart required for '+l.code,true);
+      if(m.narrative && !b.narrative) push('warn','Narrative needed for '+l.code);
+    });
+  }
+  // narrative sign-off
+  if(b.narrative && !b.signed) push('warn','Narrative present but not provider-signed');
+  if(b.narrative && b.signed) push('pass','Narrative signed by provider');
+  // score
+  const fails=issues.filter(i=>i.sev==='fail').length;
+  const warns=issues.filter(i=>i.sev==='warn').length;
+  let score = 100 - warns*7 - fails*22;
+  if(hardFail) score=Math.min(score,45);
+  score=Math.max(0,Math.min(100,score));
+  let band,bandCls;
+  if(score>=100){band='Ready';bandCls='b-green'} else if(score>=80){band='Minor warning';bandCls='b-amber'}
+  else if(score>=50){band='Needs review';bandCls='b-amber'} else {band='Blocked';bandCls='b-red'}
+  return {score,band,bandCls,issues,canSubmit:score>=80 && !hardFail};
+}
+function refreshPF(){
+  const b=state.builder, pf=preflight(b), card=$('#pf_card'); if(!card)return;
+  const ringColor = pf.score>=100?'var(--green)':pf.score>=80?'var(--gold)':pf.score>=50?'var(--gold)':'var(--rust)';
+  card.innerHTML=`
+    <div class="eyebrow">Pre-Flight</div>
+    <div class="pf" style="margin-top:12px">
+      <div class="pf-dial" style="background:conic-gradient(${ringColor} ${pf.score*3.6}deg, var(--paper-2) 0)">
+        <div style="width:92px;height:92px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center">
+          <div><div class="n">${pf.score}</div><div class="b" style="color:${ringColor}">${pf.band}</div></div>
+        </div>
+      </div>
+      <div class="pf-info">
+        <span class="badge ${pf.bandCls}">${pf.band}</span>
+        <ul class="issues">${pf.issues.map(i=>`<li><span class="mk ${i.sev}">${i.sev==='pass'?'✓':i.sev==='warn'?'!':'✕'}</span><span>${i.msg}</span></li>`).join('')}</ul>
+      </div>
+    </div>
+    <button class="btn btn-green" id="b_submit" ${pf.canSubmit?'':'disabled'} style="margin-top:16px;width:100%">${pf.canSubmit?'Submit 837D to Stedi →':'Resolve blockers to submit'}</button>
+    <div class="note">Bands: 100 Ready · 80–99 Minor warning · 50–79 Needs review · &lt;50 Blocked. Hard-required gaps (payer ID, NPI, tooth #, perio chart) cap the score below 50.</div>`;
+  // six questions
+  const firstFail=pf.issues.find(i=>i.sev==='fail'); const firstWarn=pf.issues.find(i=>i.sev==='warn');
+  $('#sixq_card').innerHTML = `<div class="eyebrow" style="margin-bottom:10px">This claim, at a glance</div>`+
+    sixq({
+      missing: firstFail?firstFail.msg:(firstWarn?firstWarn.msg:'Nothing — ready'),
+      risky: pf.score<50?'<b>Blocked — will reject</b>':pf.score<100?'Minor gaps':'Low',
+      now: pf.canSubmit?'Submit to Stedi':(firstFail?'Fix: '+firstFail.msg:'Resolve warnings'),
+      last:'Draft edited just now',
+      follow: pf.canSubmit?'After submit: watch 277CA':'—',
+      who:'You (biller)'
+    });
+  const sb=$('#b_submit');
+  if(sb&&pf.canSubmit) sb.addEventListener('click',submitClaim);
+}
+function submitClaim(){
+  const b=state.builder; const p=PAYERS[b.payer];
+  const id='KYT-'+(10232+state.claims.length);
+  const charge=b.lines.reduce((s,l)=>s+l.fee,0);
+  state.claims.unshift({
+    id, patient:b.patient||'(unnamed)', payer:p.name, code:b.lines[0]?b.lines[0].code:'—',
+    tooth:b.lines[0]?b.lines[0].tooth:'', charge,
+    status:'Accepted by Stedi', submitted:today(),
+    pcn:Math.random().toString(36).slice(2,12), ref:'(awaiting payer)',
+    nextAction:'Await payer 277CA', followUp:'in 7 days', staff:'You'
+  });
+  state.builder=freshBuilder(); persist();
+  toast('837D submitted (mock) — 277CA: Accepted by Stedi');
+  go('tracker');
+}
+
+/* ============ VIEW: TRACKER ============ */
+let trackerFilter='All';
+function renderTracker(){
+  const v=$('#view');
+  const statuses=['All','Pending Payer','Paid','Denied','Accepted by Stedi'];
+  // aging summary
+  const buckets={'0–15':0,'16–30':0,'31–60':0,'61–90':0,'90+':0};
+  state.claims.forEach(c=>{const a=ageOf(c.submitted); if(a<=15)buckets['0–15']++;else if(a<=30)buckets['16–30']++;else if(a<=60)buckets['31–60']++;else if(a<=90)buckets['61–90']++;else buckets['90+']++;});
+  const rows=state.claims.filter(c=>trackerFilter==='All'||c.status===trackerFilter);
+  v.innerHTML=`
+    ${sixq({
+      missing:'Claims with blockers show in red',
+      risky:state.claims.filter(c=>ageOf(c.submitted)>30&&c.status==='Pending Payer').length+' claim(s) aging >30d',
+      now:'Work the overdue follow-ups first',
+      last:'Live status from 277CA/835',
+      follow:'Sorted by follow-up date',
+      who:'Assigned per claim'
+    })}
+    <div class="era-grid" style="margin-bottom:18px">
+      ${Object.entries(buckets).map(([k,n])=>`<div class="era-cell"><div class="l">${k} days</div><div class="v ${k==='90+'?'neg':''}">${n}</div></div>`).join('')}
+    </div>
+    <div class="toolbar">${statuses.map(s=>`<button class="chip ${trackerFilter===s?'on':''}" data-f="${s}">${s}</button>`).join('')}
+      <button class="btn btn-ghost btn-sm" id="t_new" style="margin-left:auto">＋ New claim</button></div>
+    <table class="tbl"><thead><tr><th>Claim</th><th>Patient</th><th>Payer</th><th>Code</th><th>Charge</th><th>Status</th><th>Age</th><th>Next action</th><th>Follow-up</th><th>Who</th></tr></thead>
+    <tbody>${rows.length?rows.map(c=>{
+      const a=ageOf(c.submitted); const acls=a<=15?'a0':a<=30?'a30':'a60';
+      return `<tr><td><b>${c.id}</b></td><td>${c.patient}</td><td>${c.payer}</td><td>${c.code}${c.tooth?' · #'+c.tooth:''}</td><td>${money(c.charge)}</td>
+        <td><span class="st ${STATUS_COLORS[c.status]||'b-gray'}">${c.status}</span></td>
+        <td class="age ${acls}">${a}d</td><td>${c.nextAction}</td><td>${c.followUp}</td><td>${c.staff}</td></tr>`;
+    }).join(''):'<tr><td colspan="10" class="empty">No claims in this filter.</td></tr>'}</tbody></table>
+    <div class="note">Statuses, aging buckets (0–15/16–30/31–60/61–90/90+), and follow-up dates come from the status engine (CLAIM_TRACKING_AND_STATUS.md). In production they update automatically from Stedi 277CA/277/835.</div>`;
+  v.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{trackerFilter=b.dataset.f;renderTracker()}));
+  $('#t_new').addEventListener('click',()=>go('builder'));
+}
+
+/* ============ VIEW: ERA ============ */
+function renderEra(){
+  const v=$('#view');
+  v.innerHTML=`
+    ${sixq({missing:'—',risky:'1 line denied (D2950 build-up)',now:'Post payment + appeal denied line',last:'835 received today',follow:'Appeal within filing window',who:'You'})}
+    <div class="card">
+      <div class="eyebrow">835 ERA · received today</div>
+      <div class="cov-head" style="margin-top:6px"><h3>Guardian — Robert Sato · Claim KYT-10231</h3><span class="badge b-green">ERA matched by PCN</span></div>
+      <p class="muted" style="margin:2px 0 16px">EFT #884201 · payer ref GRD-558210 · matched to 2 service lines via lineItemControlNumber</p>
+      <div class="era-grid">
+        <div class="era-cell"><div class="l">Billed</div><div class="v">$1,650.00</div></div>
+        <div class="era-cell"><div class="l">Allowed</div><div class="v">$1,180.00</div></div>
+        <div class="era-cell"><div class="l">Insurance paid</div><div class="v pos">$640.00</div></div>
+        <div class="era-cell"><div class="l">Patient responsibility</div><div class="v">$190.00</div></div>
+        <div class="era-cell"><div class="l">Write-off (contractual)</div><div class="v">$470.00</div></div>
+        <div class="era-cell"><div class="l">Denied</div><div class="v neg">$350.00</div></div>
+      </div>
+      <div class="codes">
+        <b>Line 1 — D2740 crown #14:</b> allowed $830, paid $640, deductible $0, coinsurance $190 · <code>CARC 45</code> charge exceeds fee schedule (write-off).<br>
+        <b>Line 2 — D2950 build-up #14:</b> <span style="color:var(--rust)">denied $350</span> · <code>CARC 197</code> precert/authorization absent · <code>RARC N657</code> consider billing with documentation.
+      </div>
+      <div class="row" style="margin-top:18px;gap:10px">
+        <button class="btn btn-green btn-sm" onclick="toast('Payment posted — claim → Paid (line 1)')">Post payment</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Appeal drafted for D2950 — status → Appeal Needed')">Create appeal (denied line)</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Moved $470 to Write-off Review')">Write-off review</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Patient balance $190 generated')">Generate patient balance</button>
+      </div>
+      <div class="note">In production, <code>POST /api/era/import</code> ingests the 835 (poll or webhook), matches by Patient Control Number + line control numbers, and these actions drive real status transitions.</div>
+    </div>`;
+}
+
+/* ============ BOOT ============ */
+go('eligibility');
