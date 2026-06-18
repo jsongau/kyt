@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Individual PPO Dental Plans — Staff Training | KYT × CoverCapy</title>
+<meta name="description" content="A training module for KYT front-desk staff: what a PPO dental plan is, how coverage and waiting periods work, the glossary terms that decide a patient's bill, and which of the eight individual PPO plans fits which patient." />
+<meta name="theme-color" content="#2E5E45" />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F0E5; --paper-2:#EFE8D9; --card:#FCFAF4;
+  --ink:#21302A; --ink-soft:#3A4A42;
+  --green:#2E5E45; --green-d:#234A37; --green-l:#5C7A66;
+  --sage:#E6EDE3; --sage-2:#DCE6D8;
+  --muted:#6E7268; --line:#E3DAC8; --line-2:#D8CDB6;
+  --gold:#C0902E; --rust:#B0542E;
+  --panel:#21302A; --panel-ink:#F4EFE2; --panel-soft:#C7CEBE; --panel-eye:#A9C4AE;
+  --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+  --shadow:0 1px 0 rgba(33,48,42,.03),0 12px 34px rgba(33,48,42,.07);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.12;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(36px,5vw,58px);font-weight:400}
+h2{font-size:clamp(26px,3.4vw,38px);font-weight:400}
+h3{font-size:21px}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+em{font-style:italic}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--green)}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--green-l)}
+.eyebrow .sp{color:var(--gold)}
+.muted{color:var(--muted)}
+.disp-it{font-family:var(--serif);font-style:italic;font-weight:400}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14px;border-radius:999px;padding:12px 22px;cursor:pointer;border:1px solid transparent;transition:.15s;white-space:nowrap}
+.btn-green{background:var(--green);color:#F4EFE2}
+.btn-green:hover{background:var(--green-d)}
+.btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.btn-sm{padding:9px 16px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* header */
+.masthead{background:var(--paper);border-bottom:1px solid var(--line)}
+.masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:40px;height:40px;flex-shrink:0;display:grid;place-items:center;background:var(--green);border-radius:11px;color:var(--paper);font-family:var(--serif);font-size:20px;font-weight:600}
+.brand .bt{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.01em;line-height:1}
+.brand .bs{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.mh-right{display:flex;align-items:center;gap:16px}
+.mh-prog{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.mh-prog b{font-family:var(--serif);color:var(--green-d);font-size:14px}
+
+/* sticky progress nav */
+.toc{position:sticky;top:0;z-index:60;background:rgba(245,240,229,.93);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line)}
+.toc-prog{height:2px;background:var(--green);width:0;transition:width .15s linear}
+.toc .wrap{display:flex;align-items:center;gap:18px;height:50px}
+.toc-links{display:flex;gap:22px;font-size:13px;font-weight:500;overflow-x:auto;scrollbar-width:none}
+.toc-links::-webkit-scrollbar{display:none}
+.toc-links a{color:var(--muted);white-space:nowrap;padding:4px 0;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px}
+.toc-links a:hover,.toc-links a.on{color:var(--ink);border-color:var(--green)}
+.toc-links a .dot{width:7px;height:7px;border-radius:50%;border:1.4px solid var(--line-2);flex-shrink:0}
+.toc-links a.done .dot{background:var(--green);border-color:var(--green)}
+
+section{padding:54px 0;border-bottom:1px solid var(--line);scroll-margin-top:58px}
+section:last-of-type{border-bottom:0}
+.sec-head{max-width:760px;margin-bottom:30px}
+.sec-head .eyebrow{margin-bottom:14px}
+.sec-head h2{margin:0 0 10px}
+.sec-head .lede{font-size:18px;color:var(--ink-soft)}
+.lesson-n{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px}
+
+/* hero */
+.hero{padding:64px 0 50px}
+.hero h1{margin:16px 0 0;max-width:18ch}
+.hero .lede{font-size:19px;color:var(--ink-soft);max-width:60ch;margin:20px 0 0}
+.hero-proof{list-style:none;display:flex;flex-wrap:wrap;gap:14px 30px;margin:28px 0 0;padding:0}
+.hero-proof li{font-size:13px;color:var(--muted)}
+.hero-proof b{font-family:var(--serif);font-size:17px;color:var(--green-d);margin-right:6px}
+.hero-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+
+/* prose blocks */
+.prose{max-width:720px;font-size:16.5px;color:var(--ink)}
+.prose p{margin:0 0 1.1em}
+.prose b{color:var(--ink)}
+.callout{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:13px;padding:18px 22px;margin:22px 0;max-width:720px}
+.callout.gold{border-left-color:var(--gold)}
+.callout.rust{border-left-color:var(--rust)}
+.callout .h{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--green-d);margin-bottom:7px}
+.callout.gold .h{color:#8A6516}
+.callout.rust .h{color:var(--rust)}
+.callout p{margin:0;font-size:15px;color:var(--ink-soft);line-height:1.6}
+.callout .say{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);line-height:1.5}
+
+/* analogy cards */
+.analogy{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:26px 0;max-width:760px}
+.acard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.acard .tag{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.acard h4{font-family:var(--serif);font-size:19px;margin-bottom:8px}
+.acard p{margin:0;font-size:14px;color:var(--ink-soft)}
+
+/* vs table (ppo/hmo/discount) */
+.vs{width:100%;border-collapse:separate;border-spacing:0;margin:24px 0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:14px;background:var(--card)}
+.vs th,.vs td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.vs thead th{background:var(--paper-2);font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.vs thead th.hi{color:var(--green-d)}
+.vs tbody th{font-weight:600;color:var(--ink);width:160px}
+.vs tr:last-child td,.vs tr:last-child th{border-bottom:0}
+.vs td.good{color:var(--green-d);font-weight:600}
+.vs td.warn{color:var(--rust);font-weight:600}
+
+/* coverage tiers */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0;max-width:780px}
+.tier{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center}
+.tier .pct{font-family:var(--serif);font-size:38px;line-height:1;color:var(--green-d)}
+.tier .nm{font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin:8px 0 6px}
+.tier .ex{font-size:13px;color:var(--muted)}
+.tier.basic .pct{color:var(--green)}
+.tier.major .pct{color:var(--gold)}
+
+/* waiting period timeline */
+.timeline{margin:26px 0;max-width:760px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px}
+.tl-row{display:grid;grid-template-columns:130px 1fr;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.tl-row:last-child{border-bottom:0}
+.tl-lab{font-weight:600;font-size:13.5px}
+.tl-lab small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.tl-bar{position:relative;height:30px;background:var(--paper-2);border-radius:8px;overflow:hidden}
+.tl-fill{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding:0 12px;font-size:11.5px;font-weight:600;color:#F4EFE2;border-radius:8px;white-space:nowrap}
+.tl-fill.now{background:var(--green)}
+.tl-fill.short{background:var(--green-l)}
+.tl-fill.long{background:var(--gold)}
+.tl-scale{display:grid;grid-template-columns:130px 1fr;gap:14px;margin-top:6px}
+.tl-scale .marks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+
+/* plan showcase */
+.plan-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.plan-controls .lab{font-size:13px;color:var(--muted);font-weight:600;margin-right:4px}
+.chip{border:1px solid var(--line-2);background:var(--card);border-radius:999px;padding:8px 15px;font-size:13px;font-weight:500;cursor:pointer;transition:.12s}
+.chip:hover{border-color:var(--green)}
+.chip.sel{background:var(--green);color:#F4EFE2;border-color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);padding:22px;display:flex;flex-direction:column;transition:.15s}
+.pcard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.pcard.review{background:var(--paper-2);border-style:dashed}
+.pcard.dim{opacity:.32;filter:saturate(.6)}
+.pcard-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pcard .car{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pcard .pn{font-family:var(--serif);font-size:20px;margin-top:3px;line-height:1.1}
+.pscore{text-align:center;flex-shrink:0}
+.pscore b{font-family:var(--serif);font-size:25px;line-height:1;display:block;color:var(--green-d)}
+.pscore span{font-size:9.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}
+.tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px}
+.tag-sell{background:var(--sage);color:var(--green-d)}
+.tag-vision{background:#ECE6F2;color:#6A5396}
+.tag-best{background:#F6ECD6;color:#8A6516}
+.tag-review{background:var(--paper-2);color:var(--muted)}
+.pprice{display:flex;align-items:baseline;gap:6px;margin:4px 0 12px}
+.pprice b{font-family:var(--serif);font-size:28px}
+.pprice span{color:var(--muted);font-size:13px}
+.pprice.review b{font-size:16px;color:var(--muted);font-family:var(--sans);font-weight:600}
+.pwhy{font-size:13.5px;color:var(--ink-soft);margin-bottom:14px;min-height:38px}
+.cov{list-style:none;padding:0;margin:0 0 14px;font-size:13px}
+.cov li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);gap:10px}
+.cov li:last-child{border-bottom:0}
+.cov .v{font-weight:600;text-align:right}
+.cov .v.no{color:var(--muted);font-weight:500}
+.cov .v.wait{color:#8A6516}
+.pcard-fit{margin-top:auto;font-size:12.5px;color:var(--green-d);background:var(--sage);border-radius:10px;padding:10px 13px;line-height:1.45}
+.pcard-fit b{color:var(--green-d)}
+
+/* match the patient */
+.match{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px}
+.mrow{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.mrow .need{font-family:var(--serif);font-size:16px;color:var(--ink);flex:0 0 42%;line-height:1.25}
+.mrow .pick{font-size:13.5px;color:var(--ink-soft)}
+.mrow .pick b{color:var(--green-d)}
+
+/* glossary */
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.term{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;scroll-margin-top:64px;transition:box-shadow .2s,border-color .2s}
+.term:target{box-shadow:0 0 0 2px var(--green);border-color:var(--green)}
+.term h4{font-family:var(--serif);font-size:18px;margin-bottom:7px;color:var(--ink)}
+.term .def{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 9px}
+.term-why{padding-top:9px;border-top:1px dashed var(--line-2);font-size:12.5px;color:var(--green-d);line-height:1.5}
+.term-why::before{content:'Why it matters: ';font-weight:700;color:var(--green)}
+.gloss-jump{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}
+.gloss-jump a{font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:5px 12px;background:var(--card)}
+.gloss-jump a:hover{border-color:var(--green);color:var(--green-d)}
+
+/* inline glossary tooltip */
+.cc-tip{cursor:help;border-bottom:1px dotted var(--green);color:inherit;transition:color .18s;white-space:nowrap}
+.cc-tip:hover{color:var(--green)}
+.cc-tooltip{position:fixed;z-index:9999;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.3,.64,1);max-width:300px;width:max-content;background:linear-gradient(160deg,#1c2a22,#16201a);border:1px solid rgba(120,170,140,.4);border-radius:13px;padding:13px 15px;box-shadow:0 16px 44px rgba(0,0,0,.4)}
+.cc-tooltip.visible{opacity:1;transform:translateY(0)}
+.cc-tooltip-title{font-family:var(--serif);font-size:14.5px;font-weight:600;color:#F6F1E6;margin-bottom:6px;line-height:1.25}
+.cc-tooltip-body{font-size:12px;color:rgba(246,241,230,.78);line-height:1.55;margin-bottom:8px}
+.cc-tooltip-why{font-size:11px;color:#A7D8BE;font-weight:600;line-height:1.5;padding-top:8px;border-top:1px dashed rgba(167,216,190,.28)}
+.cc-tooltip-why::before{content:'✦ Why it matters: ';color:#E3B85C;font-weight:700}
+.cc-tooltip-arrow{position:absolute;width:10px;height:10px;background:#18221b;border-right:1px solid rgba(120,170,140,.4);border-bottom:1px solid rgba(120,170,140,.4);transform:rotate(45deg);bottom:-6px;left:50%;margin-left:-5px}
+.cc-tooltip[data-flipped="true"] .cc-tooltip-arrow{bottom:auto;top:-6px;border-right:0;border-bottom:0;border-left:1px solid rgba(120,170,140,.4);border-top:1px solid rgba(120,170,140,.4)}
+
+/* lesson complete button */
+.lesson-done{display:flex;align-items:center;gap:14px;margin-top:30px;max-width:720px;padding:16px 20px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.lesson-done .txt{font-size:13.5px;color:var(--muted)}
+.lesson-done.is-done{border-color:var(--green);background:var(--sage)}
+.lesson-done.is-done .txt{color:var(--green-d);font-weight:600}
+.ld-btn{margin-left:auto}
+
+/* quiz */
+.quiz-wrap{max-width:760px}
+.quiz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:13px;color:var(--muted);font-weight:600}
+.quiz-meta b{font-family:var(--serif);color:var(--green-d)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin-bottom:16px}
+.q-num{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:13px;margin-bottom:6px}
+.q-prompt{font-family:var(--serif);font-size:19px;line-height:1.35;margin-bottom:16px}
+.q-opts{display:flex;flex-direction:column;gap:9px}
+.q-opt{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line-2);background:var(--paper-2);border-radius:11px;padding:13px 15px;cursor:pointer;font-size:14.5px;transition:.12s;text-align:left;font-family:var(--sans);color:var(--ink);width:100%}
+.q-opt:hover:not(:disabled){border-color:var(--green-l)}
+.q-opt .mk{flex:0 0 22px;height:22px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted)}
+.q-opt.correct{border-color:var(--green);background:var(--sage)}
+.q-opt.correct .mk{background:var(--green);border-color:var(--green);color:#fff}
+.q-opt.wrong{border-color:var(--rust);background:#F3E4D8}
+.q-opt.wrong .mk{background:var(--rust);border-color:var(--rust);color:#fff}
+.q-opt:disabled{cursor:default}
+.q-exp{margin-top:14px;font-size:13.5px;line-height:1.55;color:var(--ink-soft);background:var(--paper-2);border-radius:10px;padding:12px 15px;display:none}
+.q-exp.show{display:block}
+.q-exp b{color:var(--green-d)}
+.quiz-result{text-align:center;background:var(--panel);color:var(--panel-ink);border-radius:20px;padding:38px 30px;margin-top:8px;display:none}
+.quiz-result.show{display:block}
+.quiz-result .score{font-family:var(--serif);font-size:54px;line-height:1}
+.quiz-result .lbl{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--panel-eye);margin-top:8px}
+.quiz-result h3{color:var(--panel-ink);font-size:26px;margin:16px 0 6px}
+.quiz-result p{color:var(--panel-soft);font-size:14.5px;max-width:46ch;margin:0 auto 18px}
+.quiz-result .btn-green{background:#F4EFE2;color:var(--green-d)}
+.quiz-result .btn-green:hover{background:#fff}
+
+footer{padding:40px 0 60px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6}
+footer .dis{max-width:680px;margin:0 auto 14px}
+
+@media(max-width:760px){
+  .wrap{padding:0 16px}
+  .masthead .wrap{height:58px}
+  .brand .bs{display:none}
+  .analogy,.tiers,.match,.gloss{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .mrow{flex-direction:column;gap:6px}
+  .mrow .need{flex:1}
+  .tl-row,.tl-scale{grid-template-columns:96px 1fr}
+  .vs tbody th{width:auto}
+  .hero h1{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">K</div>
+      <div>
+        <div class="bt">KYT Dental · Training</div>
+        <div class="bs">Individual PPO Plans</div>
+      </div>
+    </div>
+    <div class="mh-right">
+      <div class="mh-prog">Lessons complete · <b id="progCount">0</b>/5</div>
+      <button class="btn btn-ghost btn-sm" id="resetBtn" type="button">Reset</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STICKY PROGRESS NAV ===== -->
+<nav class="toc" aria-label="Module sections">
+  <div class="toc-prog" id="tocProg"></div>
+  <div class="wrap">
+    <div class="toc-links" id="tocLinks">
+      <a href="#l1" data-lesson="l1"><span class="dot"></span>1 · What is a PPO</a>
+      <a href="#l2" data-lesson="l2"><span class="dot"></span>2 · How coverage works</a>
+      <a href="#l3" data-lesson="l3"><span class="dot"></span>3 · Waiting periods</a>
+      <a href="#l4" data-lesson="l4"><span class="dot"></span>4 · The fine print</a>
+      <a href="#l5" data-lesson="l5"><span class="dot"></span>5 · The 8 plans</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#quiz">Knowledge check</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="sp">✦</span> Front-desk training · Module 02</span>
+    <h1>Individual PPO dental plans, explained the way a patient needs to hear it.</h1>
+    <p class="lede">When a patient walks in without usable coverage, an individual PPO is the fix — a plan they can buy themselves, often active within days. This module trains you to explain what a PPO is, how its waiting periods and limits work, and which of the eight plans fits the patient in front of you. By the end you can guide a patient from "I'm not covered" to "I'm booked" in one honest conversation.</p>
+    <ul class="hero-proof">
+      <li><b>8</b> individual PPO plans</li>
+      <li><b>5</b> short lessons</li>
+      <li><b>22</b> glossary terms</li>
+      <li><b>~25 min</b> end to end</li>
+    </ul>
+    <div class="hero-cta">
+      <a href="#l1" class="btn btn-green">Start Lesson 1 →</a>
+      <a href="#l5" class="btn btn-ghost">Jump to the plans</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LESSON 1 ===== -->
+<section id="l1">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lesson 01</span>
+      <h2>What is a PPO dental plan?</h2>
+      <p class="lede">The model behind almost every individual plan a patient will buy — and why it beats the alternatives for someone who wants to keep seeing us.</p>
+    </div>
+    <div class="prose">
+      <p><b>PPO</b> stands for <span class="cc-tip" data-k="ppo">Preferred Provider Organization</span>. It's a type of dental insurance built around a network of dentists who have agreed to accept the carrier's negotiated fees. The patient still gets to choose <em>any</em> licensed dentist, but they pay the least when they stay <span class="cc-tip" data-k="in-network">in-network</span> — which is exactly why a PPO is the right answer for a patient who wants to keep coming to KYT.</p>
+      <p>An <b>individual PPO</b> is simply a PPO a person buys for themselves, rather than getting it through an employer. They enroll directly with the carrier, pay a monthly <span class="cc-tip" data-k="premium">premium</span>, and the plan activates on a set <span class="cc-tip" data-k="effective-date">effective date</span> — sometimes the next business day. That speed is the whole pitch: a patient who lost their job, aged off a parent's plan, or is stuck in an employer waiting period can be covered before their next visit.</p>
+      <p>The reason PPO beats the two common alternatives comes down to <em>freedom and reach</em>:</p>
+    </div>
+
+    <table class="vs">
+      <thead>
+        <tr><th></th><th class="hi">PPO (what we recommend)</th><th>HMO / DHMO</th><th>Discount plan</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>Pick your dentist?</th><td class="good">Any licensed dentist; cheapest in-network</td><td class="warn">Only an assigned in-network dentist</td><td>Any dentist who honors the card</td></tr>
+        <tr><th>Is it insurance?</th><td>Yes — the plan pays a share of the bill</td><td>Yes — fixed copays per procedure</td><td class="warn">No — just a discounted fee list</td></tr>
+        <tr><th>How you pay</th><td><span class="cc-tip" data-k="coinsurance">Coinsurance</span> (a % of the cost)</td><td>Set copay per procedure</td><td>You pay the full discounted fee</td></tr>
+        <tr><th>Annual cap</th><td>Has an <span class="cc-tip" data-k="annual-maximum">annual maximum</span></td><td>Usually no annual max</td><td>No payout at all</td></tr>
+        <tr><th>Best for</th><td class="good">Keeping your dentist + real coverage on big work</td><td>Lowest premium if you'll switch dentists</td><td>The uninsured who just want a lower cash price</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="h">The one-line version for patients</div>
+      <p class="say">"A PPO lets you keep seeing us and still get insurance to pay a share of the work — an HMO would make you switch dentists, and a discount card isn't insurance at all."</p>
+    </div>
+
+    <div class="prose">
+      <p>Five terms decide everything about a PPO. Learn these and you can read any plan on the shelf: the <span class="cc-tip" data-k="premium">premium</span> (monthly cost), the <span class="cc-tip" data-k="deductible">deductible</span> (your first dollars before the plan pays), <span class="cc-tip" data-k="coinsurance">coinsurance</span> (the share the plan covers per tier), the <span class="cc-tip" data-k="annual-maximum">annual maximum</span> (the most it pays per year), and the <span class="cc-tip" data-k="waiting-period">waiting period</span> (the delay before a tier of work is usable). We unpack each one next.</p>
+    </div>
+
+    <div class="lesson-done" data-done-for="l1">
+      <div class="txt">Got the model down? Mark this lesson complete to track your progress.</div>
+      <button class="btn btn-green btn-sm ld-btn" type="button">Mark complete</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LESSON 2 ===== -->
+<section id="l2">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lesson 02</span>
+      <h2>How the coverage actually works</h2>
+      <p class="lede">Premium, deductible, coinsurance tiers, and the annual maximum — the four numbers that decide a patient's real bill.</p>
+    </div>
+    <div class="prose">
+      <p>Every PPO sorts dental work into three tiers and pays a different share of each. The pattern almost never changes — only the percentages and the fine print do.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <div class="pct">100%</div>
+        <div class="nm">Preventive</div>
+        <div class="ex">Cleanings, exams, x-rays. Usually free, day one.</div>
+      </div>
+      <div class="tier basic">
+        <div class="pct">~80%</div>
+        <div class="nm">Basic</div>
+        <div class="ex">Fillings, simple extractions. You pay ~20%.</div>
+      </div>
+      <div class="tier major">
+        <div class="pct">~50%</div>
+        <div class="nm">Major</div>
+        <div class="ex">Crowns, root canals, dentures, implants. You pay ~half.</div>
+      </div>
+    </div>
+
+    <div class="callout gold">
+      <div class="h">Analogy — "split the check"</div>
+      <p><span class="cc-tip" data-k="coinsurance">Coinsurance</span> is just how the bill gets split. On preventive the plan buys the whole meal; on basic you cover the tip; on major you split it down the middle. The cheaper the plan, the more of the major-work check the patient picks up — which is why premium alone never tells the story.</p>
+    </div>
+
+    <div class="prose">
+      <p>Two more numbers sit on top of those tiers:</p>
+      <p>The <b><span class="cc-tip" data-k="deductible">deductible</span></b> is the patient's first out-of-pocket dollars on restorative work — usually about $50 — before the plan starts reimbursing. Preventive cleanings are almost always exempt, so a patient can use the plan for a free cleaning without ever touching the deductible.</p>
+      <p>The <b><span class="cc-tip" data-k="annual-maximum">annual maximum</span></b> is the ceiling: the most the plan will pay in one <span class="cc-tip" data-k="plan-year">plan year</span>. Hit it, and everything after is 100% on the patient — even work the plan would normally cover at 80%. It <span class="cc-tip" data-k="calendar-year">resets</span> each year. Our plans range from a $1,000 cap (UHC) to $10,000 (MetLife).</p>
+    </div>
+
+    <div class="callout">
+      <div class="h">Worked example — read this out loud once</div>
+      <p>A patient needs a <b>$1,200 crown</b> on a plan that covers major at 50% with a $50 deductible and a $1,500 annual max. They pay the $50 deductible, then split the remaining $1,150 → the plan pays ~$575, the patient pays ~$575. Because $575 is well under the $1,500 cap, the plan still has room left for the rest of the year.</p>
+    </div>
+
+    <div class="prose">
+      <p>One subtlety worth teaching: many cheap plans <em>phase</em> major coverage — they pay 20% in Year 1 and step up to 50% in Year 2. Ameritas is our example. Great premium, but a patient who needs a crown immediately should know they'll only get 20% back this year.</p>
+    </div>
+
+    <div class="lesson-done" data-done-for="l2">
+      <div class="txt">Comfortable reading a plan's four numbers? Mark complete.</div>
+      <button class="btn btn-green btn-sm ld-btn" type="button">Mark complete</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LESSON 3 ===== -->
+<section id="l3">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lesson 03</span>
+      <h2>Waiting periods — the part patients get wrong</h2>
+      <p class="lede">A plan can be active and still not pay for the work a patient needs. This is the single most important thing to explain honestly, up front.</p>
+    </div>
+    <div class="prose">
+      <p>A <b><span class="cc-tip" data-k="waiting-period">waiting period</span></b> is the delay between the day coverage starts and the day a <em>tier</em> of treatment becomes usable. Preventive care almost always starts day one. Basic work often waits 0–3 months. Major work — crowns, root canals, implants — commonly waits 6–12 months.</p>
+    </div>
+
+    <div class="callout gold">
+      <div class="h">Analogy — "the new-gym rule"</div>
+      <p>Joining a PPO is like joining a gym. You can use the treadmill the day you sign up (that's preventive). The free-weights room opens a few weeks later (basic). But the personal-trainer-and-sauna package — the expensive stuff — doesn't unlock for months (major). The membership is real on day one; not every room is.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-lab">Preventive<small>cleanings, exams, x-rays</small></div>
+        <div class="tl-bar"><div class="tl-fill now" style="width:8%">Day 1</div></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-lab">Basic<small>fillings, extractions</small></div>
+        <div class="tl-bar"><div class="tl-fill short" style="width:34%">0–3 months (varies)</div></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-lab">Major<small>crowns, root canals, implants</small></div>
+        <div class="tl-bar"><div class="tl-fill long" style="width:92%">6–12 months (varies)</div></div>
+      </div>
+      <div class="tl-scale">
+        <div></div>
+        <div class="marks"><span>Day 1</span><span>3 mo</span><span>6 mo</span><span>9 mo</span><span>12 mo</span></div>
+      </div>
+    </div>
+
+    <div class="callout rust">
+      <div class="h">The trap: "active" ≠ "usable"</div>
+      <p class="say">"Your plan is active — but that doesn't always mean every service is usable yet. Let's confirm which treatments are covered <em>today</em> versus which ones have a waiting period, so there are no surprises when you sit in the chair."</p>
+    </div>
+
+    <div class="prose">
+      <p>Why do waiting periods exist? They stop people from enrolling, getting a $2,000 crown, and cancelling the next month. That's also the trade-off you can explain: <b>no-wait plans charge a higher premium; long-wait plans are cheaper but lock the patient out of major coverage early.</b> Ameritas charges more precisely because it has no waiting periods; UHC is cheap partly because it doesn't cover major work at all.</p>
+      <p>The practical move at the front desk: match the <em>timeline</em> to the <em>treatment</em>. A patient who needs a crown next month and a plan with a 12-month major wait is a mismatch you should catch before they enroll — point them to a no-wait or fast-ramp plan instead (Lesson 5).</p>
+    </div>
+
+    <div class="lesson-done" data-done-for="l3">
+      <div class="txt">Can you explain "active vs usable" in one breath? Mark complete.</div>
+      <button class="btn btn-green btn-sm ld-btn" type="button">Mark complete</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LESSON 4 ===== -->
+<section id="l4">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lesson 04</span>
+      <h2>The fine print patients deserve to hear</h2>
+      <p class="lede">The missing-tooth clause, frequency limits, and the difference between an effective date and a waiting period. Disclose these honestly — every time.</p>
+    </div>
+
+    <div class="prose">
+      <p>The <b><span class="cc-tip" data-k="missing-tooth">missing-tooth clause</span></b> is the one that burns patients most often. Many PPOs will not pay to replace a tooth that was <em>already missing before the policy started</em>. If a patient lost a molar last year and buys a plan today hoping to get an implant covered, the missing-tooth clause can deny it entirely.</p>
+    </div>
+
+    <div class="callout rust">
+      <div class="h">Say this verbatim before quoting any implant or bridge</div>
+      <p class="say">"Because that tooth was already missing before this policy starts, the plan likely won't cover the implant to replace it — that's the missing-tooth clause, and I want you to know it upfront. Let's request a pretreatment estimate in writing before you commit."</p>
+    </div>
+
+    <div class="analogy">
+      <div class="acard">
+        <div class="tag">Gotcha 02</div>
+        <h4>Frequency limits</h4>
+        <p>Plans cap how often they'll pay: cleanings/exams ~2×/year, bitewing x-rays ~1×/year, a panoramic x-ray every 3–5 years, a crown once per 5–7 years per tooth. Do it early and the patient pays 100%. Always check the last service date.</p>
+      </div>
+      <div class="acard">
+        <div class="tag">Gotcha 03</div>
+        <h4>Effective date ≠ waiting period</h4>
+        <p>The <span class="cc-tip" data-k="effective-date">effective date</span> is when coverage <em>begins</em>. The <span class="cc-tip" data-k="waiting-period">waiting period</span> is when a tier becomes <em>usable</em>. A plan can be effective tomorrow yet still make a patient wait 12 months for a crown. Quote both separately.</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Two more honest disclosures worth memorizing. <b>Adult orthodontics is rare</b> on individual PPOs — Delta is our one exception, and even then expect lifetime caps. And the <b><span class="cc-tip" data-k="annual-maximum">annual maximum</span> can run out mid-treatment:</b> a big case can exhaust a $1,000 cap on a single crown, leaving the rest of the year at full price. Flag it before treatment, not after.</p>
+    </div>
+
+    <div class="callout">
+      <div class="h">The compliance line — we are educators, not sellers</div>
+      <p>We're an independent practice, not affiliated with any carrier. We share plan facts and help patients find enrollment links — we never tell a patient which plan to buy as advice, interpret their coverage, or guarantee benefits. When a patient asks <em>"which one should I buy?"</em>, hand off to a licensed agent and confirm all benefits with the carrier in writing. Collect only the minimum member info needed, and keep it secure (HIPAA).</p>
+    </div>
+
+    <div class="lesson-done" data-done-for="l4">
+      <div class="txt">Know the missing-tooth line by heart? Mark complete.</div>
+      <button class="btn btn-green btn-sm ld-btn" type="button">Mark complete</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LESSON 5 — THE 8 PLANS ===== -->
+<section id="l5">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lesson 05</span>
+      <h2>The eight plans — which is good for what</h2>
+      <p class="lede">The whole shelf at a glance. Filter by what the patient needs; each card shows the real numbers and a one-line "best for." These figures match the CoverCapy hub and are indicative — always confirm against the carrier's current Schedule of Benefits.</p>
+    </div>
+
+    <div class="plan-controls" id="planControls">
+      <span class="lab">Patient needs:</span>
+      <button class="chip sel" data-filter="all" type="button">All plans</button>
+      <button class="chip" data-filter="cheap" type="button">Tight budget</button>
+      <button class="chip" data-filter="nowait" type="button">Work now / no wait</button>
+      <button class="chip" data-filter="implant" type="button">Implants</button>
+      <button class="chip" data-filter="ortho" type="button">Braces / Invisalign</button>
+      <button class="chip" data-filter="highmax" type="button">High annual max</button>
+    </div>
+
+    <div class="grid" id="planGrid"></div>
+
+    <div class="sec-head" style="margin:46px 0 18px">
+      <h3 style="font-family:var(--serif);font-size:24px">Match the patient — the front-desk cheat sheet</h3>
+      <p class="muted" style="font-size:14px;margin-top:6px">Frame this as education and comparison, never a personalized sale. It's the fast lookup for "I need ___."</p>
+    </div>
+    <div class="match" id="matchGrid"></div>
+
+    <div class="lesson-done" data-done-for="l5">
+      <div class="txt">Know the shelf well enough to match a walk-in? Mark complete, then take the knowledge check.</div>
+      <button class="btn btn-green btn-sm ld-btn" type="button">Mark complete</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GLOSSARY ===== -->
+<section id="glossary">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Reference</span>
+      <h2>The glossary</h2>
+      <p class="lede">Every term a patient might ask about, in plain language. These are the same definitions behind the dotted-underline tooltips throughout the lessons — hover any of them to see this on the spot.</p>
+    </div>
+    <div class="gloss-jump" id="glossJump"></div>
+    <div class="gloss" id="glossGrid"></div>
+  </div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Knowledge check</span>
+      <h2>Prove you've got it</h2>
+      <p class="lede">Ten questions across the five lessons. Pick an answer to see instant feedback and the reasoning. Pass mark is 80% — your result saves automatically.</p>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-meta">
+        <span>Answered: <b id="qAnswered">0</b>/10</span>
+        <span>Best score: <b id="qBest">—</b></span>
+      </div>
+      <div id="quizList"></div>
+      <div class="quiz-result" id="quizResult">
+        <div class="score" id="qScore">0%</div>
+        <div class="lbl" id="qScoreLbl">Your score</div>
+        <h3 id="qVerdict">Nice work</h3>
+        <p id="qVerdictMsg"></p>
+        <button class="btn btn-green" id="qRetry" type="button">Retake the check</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="dis">Training use only. Plan figures match the CoverCapy hub and are indicative — waiting periods, percentages, ortho/implant terms, and activation rules vary by carrier and U.S. state. Verify against each carrier's current Schedule of Benefits before quoting a patient. KYT Dental is independent and not affiliated with or endorsed by any carrier; this is education, not the sale of insurance.</p>
+    <p>KYT Dental · Individual PPO Training · built on the CoverCapy plan data</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- data: plans (real numbers from the CoverCapy hub) ---------- */
+const PLANS=[
+ {key:'uhc',carrier:'UnitedHealthcare',name:'Primary Dental',monthly:30,annualMax:1000,score:74,best:'Cheapest on the shelf, basic care from day one (ages 64 and under).',bestSelling:true,vision:false,tags:['cheap'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:50,wait:0},major:null,implant:null},note:'No major coverage at all; ages ≤64. Active in 1–3 business days.',
+  fit:'<b>Just cleanings or a tight budget.</b> A fast, cheap bridge after losing work coverage.'},
+ {key:'ameritas',carrier:'Ameritas',name:'PrimeStar Care Complete',monthly:60,annualMax:2000,score:80,best:'No waiting periods, and the only plan that covers bone grafts.',vision:false,tags:['nowait'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:80,wait:0},major:{pct:20,wait:0},implant:null},note:'Major pays just 20% in Year 1, then 50%. Active next business day.',
+  fit:'<b>Needs work now.</b> Crown or root canal soon and can\'t wait out a 12-month clock.'},
+ {key:'guardian',carrier:'Guardian',name:'Premier 2.0',monthly:70,annualMax:3000,score:85,best:'85% basic from day one, plus whitening and kids\' braces.',bestSelling:true,vision:false,tags:['ortho','implant'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:85,wait:0},major:{pct:50,wait:12},implant:{pct:50,wait:12}},note:'Child ortho (<19) + whitening. Major/implant wait 12 mo. 1st of month.',
+  fit:'<b>Families.</b> A filling today (85% day one) and a kid who may need braces.'},
+ {key:'delta',carrier:'Delta Dental',name:'PPO Individual Premium',monthly:75,annualMax:2000,score:84,best:'Orthodontics for braces and aligners — adults too — plus implants.',vision:false,tags:['ortho','implant'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:80,wait:6},major:{pct:50,wait:12},implant:{pct:50,wait:12}},note:'The only plan with adult ortho. Activates 1st or 15th (your choice).',
+  fit:'<b>Adult Invisalign or braces.</b> The one plan that covers orthodontics for grown-ups.'},
+ {key:'aetna',carrier:'Aetna',name:'Dental Direct',monthly:50,annualMax:1250,score:77,best:'Balanced coverage for everyday dental needs.',vision:false,tags:['cheap'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:80,wait:6},major:{pct:50,wait:12},implant:null},note:'Solid mid-tier fallback for a patient who can wait. 1st of month.',
+  fit:'<b>Balanced & can wait.</b> Reliable everyday coverage at a moderate premium.'},
+ {key:'moo',carrier:'Mutual of Omaha',name:'Dental Preferred',monthly:90,annualMax:5000,score:83,best:'High $5,000 maximum with implant coverage.',vision:false,tags:['implant','highmax'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:80,wait:0},major:{pct:50,wait:6},implant:{pct:50,wait:12}},note:'Big $5,000 cap. Underwritten by TruAssure. Active in 1–3 business days.',
+  fit:'<b>Big case / implants.</b> Lots of major work where a low annual cap would run out.'},
+ {key:'humana',carrier:'Humana',name:'Extend 5000',monthly:100,annualMax:5000,score:86,best:'Dental, vision, and a $200/yr whitening allowance, with faster implants.',vision:true,tags:['implant','highmax'],
+  cov:{preventive:{pct:100,wait:0},basic:{pct:80,wait:3},major:{pct:50,wait:6},implant:{pct:50,wait:6}},note:'Fastest implant ramp (6 mo) + vision + whitening allowance. $75 deductible.',
+  fit:'<b>Implants, fast.</b> Shortest major/implant wait, plus vision perks.'},
+ {key:'metlife',carrier:'MetLife',name:'NCD Complete',monthly:null,annualMax:10000,score:null,best:'Highest annual maximum on the shelf ($10,000).',vision:false,review:true,tags:['highmax'],
+  cov:{preventive:{pct:100,wait:0},basic:null,major:null,implant:null},note:'Priced around $100/mo. Effectiveness still under review.',
+  fit:'<b>Highest max — pending.</b> Biggest ceiling on the board, gathering reviews.'}
+];
+const FILTERS={
+  cheap:p=>['uhc','aetna'].includes(p.key),
+  nowait:p=>['ameritas','guardian','moo','uhc'].includes(p.key),
+  implant:p=>p.cov.implant,
+  ortho:p=>['guardian','delta'].includes(p.key),
+  highmax:p=>p.annualMax>=5000
+};
+const MATCH=[
+  ['Just cleanings / tight budget','<b>UHC</b> — cheapest, preventive + basic day one.'],
+  ['A filling, soon','<b>Guardian</b> (85% day one) or <b>Ameritas</b> (no wait).'],
+  ['Crown or root canal soon','<b>Ameritas</b> (no waiting period) or <b>Humana</b> (major at 6 mo).'],
+  ['An implant','<b>Humana</b> (fastest, 6 mo + vision) or <b>Mutual of Omaha</b> ($5k max).'],
+  ['Kid needs braces','<b>Guardian</b> — child ortho under 19.'],
+  ['Adult Invisalign / braces','<b>Delta</b> — the only adult ortho plan.'],
+  ['Just lost work coverage','<b>UHC</b> (fast, cheap bridge) or <b>Ameritas</b> (no waits).'],
+  ['Lots of big work / high max','<b>Mutual of Omaha</b> or <b>Humana</b> ($5k); MetLife $10k (pending).']
+];
+
+/* ---------- data: glossary (verbatim from the CoverCapy hub, + premium) ---------- */
+const TIPS={
+  'ppo':{t:'PPO dental insurance',b:'Preferred Provider Organization. Flexible plans that work with any licensed dentist, with the lowest cost when you choose in-network providers.',w:'PPO is the dominant individual dental model, and the freedom to keep your dentist is the main reason to pick one.'},
+  'premium':{t:'Premium',b:'The fixed amount a member pays each month to keep the plan active, whether or not they use it. Our plans run roughly $30 to $100 a month.',w:'Premium is the most visible number, but the cheapest premium often hides the weakest coverage on the work a patient actually needs.'},
+  'waiting-period':{t:'Waiting period',b:'A delay between enrollment and when a tier of coverage activates. Basic services like fillings typically wait 0 to 3 months, major work like crowns and root canals 6 to 12 months. Preventive care usually has no wait.',w:'Waiting periods stop people from enrolling, getting expensive work, then cancelling. No-wait plans charge more in premium; long-wait plans charge less but lock you out of major coverage early.'},
+  'annual-maximum':{t:'Annual maximum',b:'The most a PPO will pay for covered services in one plan year. Once you hit it, all further treatment that year is 100% out of pocket, even work it would normally cover at 80%. It resets each plan year.',w:'A $1,000 cap means insurance can never pay you more than $1,000 that year. Higher-cap plans cost more but unlock larger reimbursements when you need them.'},
+  'deductible':{t:'Deductible',b:'Your first out-of-pocket dollars on covered restorative services before insurance starts reimbursing, usually around $50. Preventive cleanings and exams are usually exempt.',w:'It raises your true out-of-pocket on the first covered treatment of the year, a number most patients miss when comparing plans.'},
+  'coinsurance':{t:'Coinsurance',b:'Your percentage share of the allowed amount after the deductible. Typical PPO tiers are 100% preventive, 80% basic, 50% major. Some plans pay 20% on major in Year 1 and step up to 50% in Year 2.',w:'Coinsurance is what insurance is actually worth on a procedure. Cheap plans look good until you see they only pay 50% on the work you need.'},
+  'in-network':{t:'In-network dentist',b:'A dentist contracted with your PPO carrier to accept negotiated rates and file claims for you. In-network means lower bills and less paperwork.',w:'Choosing in-network is the single biggest lever for reducing your out-of-pocket cost.'},
+  'out-of-pocket':{t:'Out of pocket',b:'The amount you may still pay after insurance benefits are applied.',w:'This is the number patients usually care about most.'},
+  'balance-billing':{t:'Balance billing',b:'When an out-of-network dentist bills you the difference between their full fee and what the plan allows.',w:'Staying in-network protects you from balance billing, so confirm acceptance before you book.'},
+  'missing-tooth':{t:'Missing tooth clause',b:'An exclusion in many PPOs that denies coverage for replacing teeth lost before the policy effective date, subject to the replacement limitations in your certificate.',w:'Request a pretreatment estimate before scheduling implant work on a tooth you lost before the plan started.'},
+  'calendar-year':{t:'Calendar year reset',b:'Annual benefits restart on January 1 regardless of when you enrolled. A December cleaning bills against this year; a January cleaning bills against next.',w:'Knowing your reset date lets you sequence care so nothing is wasted.'},
+  'plan-year':{t:'Plan year',b:'A 12-month benefit cycle. UHC, Aetna, and Guardian follow the calendar year and reset Jan 1. Ameritas, Mutual of Omaha, and Humana use a plan year that resets on your enrollment anniversary.',w:'Knowing which type your plan follows helps you time treatment around the reset.'},
+  'effective-date':{t:'Effective date',b:'The day your coverage officially begins after enrollment. Some carriers start the next business day; Guardian activates on the 1st of the following month.',w:'Effective dates determine when you can actually use your benefits.'},
+  'day-one':{t:'Day 1 activation',b:'Coverage usable immediately, with no waiting period for that tier. Preventive care is almost always day one; a few plans extend it to basic or major work.',w:'If you need care now, day-one activation is the difference between a useful plan and a useless one.'},
+  'allowed-amount':{t:'Allowed amount',b:'The maximum negotiated fee a PPO carrier accepts for a procedure, usually lower than the dentist’s full fee.',w:'The gap between the full fee and the allowed amount is what the PPO negotiates away on your behalf.'},
+  'ada-fee':{t:'ADA fee schedule',b:'Standard procedure pricing the ADA publishes. In-network PPO dentists contract to charge no more than the allowed amount.',w:'The cost-versus-coverage math only works because in-network providers are bound to fee-schedule pricing.'},
+  'cdt':{t:'CDT codes',b:'Current Dental Terminology codes, the standardized billing codes for every procedure. Same code, same payout, regardless of practice.',w:'They are how PPO reimbursements get calculated, so an estimate by code is portable between offices.'},
+  'coverage-preventive':{t:'Preventive care',b:'Cleanings, exams, x-rays, and oral cancer screening. Almost always covered 100% with no waiting period.',w:'Preventive care is the cheapest dental investment you can make.'},
+  'coverage-basic':{t:'Basic services',b:'Procedures like fillings, simple extractions, and basic perio. Typically 80% covered, sometimes rising in Year 2.',w:'Basic services are the most common dental treatment, so this rate drives most of your real cost.'},
+  'coverage-major':{t:'Major services',b:'More involved treatment, like crowns, bridges, root canals, and dentures. Often starts at 20 to 50% and improves in Year 2 on phased plans.',w:'Major coverage rates determine your out-of-pocket on the most expensive procedures.'},
+  'implants':{t:'Implants',b:'Titanium posts placed in the jawbone to replace lost teeth. Major-service coverage and waiting periods apply, and a missing-tooth clause can limit older losses.',w:'Implants are a major investment, so plan timing and the missing-tooth clause are crucial.'},
+  'whitening':{t:'Whitening',b:'Cosmetic brightening of the teeth. Coverage is rare in PPO dental, since most carriers exclude it as cosmetic. Guardian covers it as a benefit, and Humana offers a flat yearly allowance.',w:'If whitening matters to you, it narrows your plan choice significantly, so it is worth flagging before you enroll.'}
+};
+const GLOSS_ORDER=['ppo','premium','waiting-period','annual-maximum','deductible','coinsurance','in-network','out-of-pocket','balance-billing','missing-tooth','calendar-year','plan-year','effective-date','day-one','allowed-amount','ada-fee','cdt','coverage-preventive','coverage-basic','coverage-major','implants','whitening'];
+
+/* ---------- data: quiz ---------- */
+const QUIZ=[
+ {q:'A patient wants to keep seeing us at KYT and still have insurance pay a share of their crown. Which model fits?',
+  o:['A PPO plan','A dental HMO','A discount card','None — they must pay cash'],a:0,
+  e:'A <b>PPO</b> lets the patient choose any licensed dentist (so they can stay with us) while the plan pays a share of covered work. An HMO would assign them a different in-network dentist; a discount card isn’t insurance.'},
+ {q:'On a typical PPO, what share does the plan usually cover for major work like a crown or root canal?',
+  o:['100%','~80%','~50%','0%'],a:2,
+  e:'The standard tier pattern is <b>100% preventive, ~80% basic, ~50% major</b>. The patient generally splits the major-work bill with the plan.'},
+ {q:'A patient says "my plan is active, so the crown is covered, right?" What’s the honest answer?',
+  o:['Yes, active means everything is usable','Not necessarily — major work may still have a waiting period','Only if they paid the deductible','Only in-network'],a:1,
+  e:'<b>Active is not the same as usable.</b> A plan can be effective immediately yet still impose a 6–12 month waiting period on major services. Always confirm which tiers are usable today.'},
+ {q:'A patient lost a molar last year and wants an implant covered by a plan they’d buy today. What must you disclose?',
+  o:['Nothing — implants are always covered','The missing-tooth clause may deny it','They just need to wait 30 days','Implants are preventive care'],a:1,
+  e:'The <b>missing-tooth clause</b> excludes replacing teeth lost before the policy’s effective date. Disclose it upfront and request a pretreatment estimate in writing.'},
+ {q:'A patient needs a crown next month and has a tight timeline. Which plan best avoids a long major-work wait?',
+  o:['UHC Primary Dental','Aetna Dental Direct','Ameritas PrimeStar Care Complete','MetLife NCD Complete'],a:2,
+  e:'<b>Ameritas</b> has no waiting periods (though major pays 20% in Year 1). UHC doesn’t cover major at all; Aetna waits 12 months on major; MetLife is still under review.'},
+ {q:'Which plan is the right pointer for an adult who wants Invisalign?',
+  o:['Delta Dental PPO Individual Premium','Guardian Premier 2.0','UHC Primary Dental','Humana Extend 5000'],a:0,
+  e:'<b>Delta</b> is our only plan that covers orthodontics for adults. Guardian covers child ortho (under 19) only.'},
+ {q:'A patient wants an implant as fast as possible and likes the idea of vision perks. Best pointer?',
+  o:['UHC Primary Dental','Humana Extend 5000','Aetna Dental Direct','Guardian Premier 2.0'],a:1,
+  e:'<b>Humana Extend 5000</b> has the fastest implant ramp (6-month wait), a $5,000 max, plus bundled vision and a whitening allowance.'},
+ {q:'What does the annual maximum do once a patient hits it mid-year?',
+  o:['It doubles for the rest of the year','Nothing changes','Further covered work is 100% out of pocket until it resets','The plan cancels'],a:2,
+  e:'The <b>annual maximum</b> is the ceiling on what the plan pays per plan year. After it’s reached, the patient pays 100% until it resets the next plan year.'},
+ {q:'A patient just lost their job and wants something cheap and fast as a bridge to new coverage. Best pointer?',
+  o:['MetLife NCD Complete','Delta Dental','UHC Primary Dental','Mutual of Omaha'],a:2,
+  e:'<b>UHC</b> is the cheapest on the shelf and active in 1–3 business days with preventive and basic from day one — a clean short-term bridge. Ameritas is the no-wait alternative.'},
+ {q:'A patient asks you point-blank, "Which plan should I buy?" What’s the compliant move?',
+  o:['Recommend the highest-rated plan','Tell them to buy the cheapest','Share the facts, then hand off to a licensed agent','Guarantee the benefits of one plan'],a:2,
+  e:'We educate and compare, but we don’t sell or advise. <b>Hand off to a licensed agent</b> for the actual "which to buy" decision and confirm benefits with the carrier — that’s the compliant path.'}
+];
+
+/* ---------- storage ---------- */
+const KEY='kyt:ppo:edu:v1';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+let state=load();
+if(!state.lessons)state.lessons={};
+if(!state.quiz)state.quiz={best:null};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function safeScroll(el,opt){if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView(opt);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function money(n){return '$'+Number(n).toLocaleString()}
+function covLine(label,c){
+  if(c===null||c===undefined)return '<li><span>'+label+'</span><span class="v no">Not covered</span></li>';
+  const waitTxt=c.wait>0?(' · '+c.wait+'mo wait'):' · day 1';
+  const cls=c.wait>0?'v wait':'v';
+  return '<li><span>'+label+'</span><span class="'+cls+'">'+c.pct+'%'+waitTxt+'</span></li>';
+}
+
+/* ---------- render plan cards ---------- */
+function planCard(p){
+  const tagHtml=[];
+  if(p.bestSelling)tagHtml.push('<span class="tag tag-best">Best selling</span>');
+  if(p.vision)tagHtml.push('<span class="tag tag-vision">+ Vision</span>');
+  if(p.review)tagHtml.push('<span class="tag tag-review">Gathering reviews</span>');
+  if(!p.review)tagHtml.push('<span class="tag tag-sell">'+p.best.split(',')[0].split('.')[0].slice(0,26)+'</span>');
+  const score=p.score?('<div class="pscore"><b>'+p.score+'</b><span>rating</span></div>'):'';
+  const price=p.review
+    ? '<div class="pprice review"><b>~$100/mo · pending</b></div>'
+    : '<div class="pprice"><b>'+money(p.monthly)+'</b><span>/mo</span></div>';
+  return '<div class="pcard'+(p.review?' review':'')+'" data-key="'+p.key+'">'
+    +'<div class="pcard-h"><div><div class="car">'+esc(p.carrier)+'</div><div class="pn">'+esc(p.name)+'</div></div>'+score+'</div>'
+    +'<div class="badges">'+tagHtml.join('')+'</div>'
+    +price
+    +'<div class="pwhy">'+esc(p.best)+'</div>'
+    +'<ul class="cov">'
+      +covLine('Cleanings',p.cov.preventive)
+      +covLine('Fillings',p.cov.basic)
+      +covLine('Crowns / RCT',p.cov.major)
+      +covLine('Implants',p.cov.implant)
+      +'<li><span>Annual max</span><span class="v">'+money(p.annualMax)+'</span></li>'
+    +'</ul>'
+    +'<div class="pcard-fit">'+p.fit+'</div>'
+    +'</div>';
+}
+function renderPlans(filter){
+  $('#planGrid').innerHTML=PLANS.map(planCard).join('');
+  applyFilter(filter||'all');
+}
+function applyFilter(f){
+  $$('#planGrid .pcard').forEach(card=>{
+    const p=PLANS.find(x=>x.key===card.dataset.key);
+    const show=f==='all'||(FILTERS[f]&&FILTERS[f](p));
+    card.classList.toggle('dim',!show);
+  });
+}
+$('#planControls').addEventListener('click',e=>{
+  const b=e.target.closest('.chip');if(!b)return;
+  $$('#planControls .chip').forEach(c=>c.classList.remove('sel'));
+  b.classList.add('sel');applyFilter(b.dataset.filter);
+});
+
+/* ---------- render match grid ---------- */
+$('#matchGrid').innerHTML=MATCH.map(m=>'<div class="mrow"><div class="need">'+m[0]+'</div><div class="pick">'+m[1]+'</div></div>').join('');
+
+/* ---------- render glossary ---------- */
+function renderGlossary(){
+  $('#glossGrid').innerHTML=GLOSS_ORDER.map(k=>{
+    const x=TIPS[k];
+    return '<div class="term" id="term-'+k+'"><h4>'+esc(x.t)+'</h4><p class="def">'+x.b+'</p><div class="term-why">'+x.w+'</div></div>';
+  }).join('');
+  $('#glossJump').innerHTML=GLOSS_ORDER.map(k=>'<a href="#term-'+k+'">'+esc(TIPS[k].t)+'</a>').join('');
+}
+
+/* ---------- inline tooltips ---------- */
+let tipEl;
+function ensureTip(){
+  if(tipEl)return tipEl;
+  tipEl=document.createElement('div');tipEl.className='cc-tooltip';
+  tipEl.innerHTML='<div class="cc-tooltip-title"></div><div class="cc-tooltip-body"></div><div class="cc-tooltip-why"></div><div class="cc-tooltip-arrow"></div>';
+  document.body.appendChild(tipEl);return tipEl;
+}
+function showTip(span){
+  const k=span.dataset.k,x=TIPS[k];if(!x)return;
+  const el=ensureTip();
+  el.querySelector('.cc-tooltip-title').textContent=x.t;
+  el.querySelector('.cc-tooltip-body').textContent=x.b;
+  el.querySelector('.cc-tooltip-why').textContent=x.w;
+  el.classList.add('visible');
+  const r=span.getBoundingClientRect();
+  const tr=el.getBoundingClientRect();
+  let top=r.top-tr.height-10,flip=false;
+  if(top<8){top=r.bottom+10;flip=true}
+  let left=r.left+r.width/2-tr.width/2;
+  left=Math.max(10,Math.min(left,window.innerWidth-tr.width-10));
+  el.style.top=top+'px';el.style.left=left+'px';
+  el.setAttribute('data-flipped',flip);
+  const arrow=el.querySelector('.cc-tooltip-arrow');
+  arrow.style.left=(r.left+r.width/2-left)+'px';
+}
+function hideTip(){if(tipEl)tipEl.classList.remove('visible')}
+document.addEventListener('mouseover',e=>{const s=e.target.closest('.cc-tip');if(s)showTip(s)});
+document.addEventListener('mouseout',e=>{if(e.target.closest('.cc-tip'))hideTip()});
+document.addEventListener('focusin',e=>{const s=e.target.closest('.cc-tip');if(s)showTip(s)});
+document.addEventListener('focusout',e=>{if(e.target.closest('.cc-tip'))hideTip()});
+// make tip spans focusable
+function wireTipSpans(){$$('.cc-tip').forEach(s=>{if(!s.hasAttribute('tabindex'))s.setAttribute('tabindex','0')})}
+
+/* ---------- lessons / progress ---------- */
+const LESSONS=['l1','l2','l3','l4','l5'];
+function syncProgress(){
+  const done=LESSONS.filter(l=>state.lessons[l]).length;
+  $('#progCount').textContent=done;
+  LESSONS.forEach(l=>{
+    const link=$('.toc-links a[data-lesson="'+l+'"]');
+    if(link)link.classList.toggle('done',!!state.lessons[l]);
+    const block=$('.lesson-done[data-done-for="'+l+'"]');
+    if(block){
+      const on=!!state.lessons[l];
+      block.classList.toggle('is-done',on);
+      const btn=block.querySelector('.ld-btn');
+      btn.textContent=on?'✓ Completed':'Mark complete';
+      block.querySelector('.txt').textContent=on?'Lesson complete — nicely done.':block.dataset.defaultTxt;
+    }
+  });
+}
+$$('.lesson-done').forEach(block=>{
+  block.dataset.defaultTxt=block.querySelector('.txt').textContent;
+  block.querySelector('.ld-btn').addEventListener('click',()=>{
+    const l=block.dataset.doneFor;
+    state.lessons[l]=!state.lessons[l];
+    save(state);syncProgress();
+  });
+});
+
+/* ---------- scroll progress bar + active link ---------- */
+function onScroll(){
+  const h=document.documentElement;
+  const pct=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+  $('#tocProg').style.width=Math.min(100,pct)+'%';
+  let cur='';
+  $$('section').forEach(sec=>{if(window.scrollY>=sec.offsetTop-120)cur=sec.id});
+  $$('.toc-links a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+
+/* ---------- quiz ---------- */
+function renderQuiz(){
+  $('#quizList').innerHTML=QUIZ.map((item,i)=>{
+    const opts=item.o.map((o,j)=>'<button class="q-opt" data-q="'+i+'" data-o="'+j+'" type="button"><span class="mk">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span></button>').join('');
+    return '<div class="q" data-q="'+i+'"><div class="q-num">Question '+(i+1)+' of '+QUIZ.length+'</div>'
+      +'<div class="q-prompt">'+item.q+'</div>'
+      +'<div class="q-opts">'+opts+'</div>'
+      +'<div class="q-exp" data-exp="'+i+'"><b>Why:</b> '+item.e+'</div></div>';
+  }).join('');
+  $('#qBest').textContent=state.quiz.best!=null?state.quiz.best+'%':'—';
+}
+const answered={};
+$('#quizList').addEventListener('click',e=>{
+  const btn=e.target.closest('.q-opt');if(!btn)return;
+  const qi=+btn.dataset.q;if(answered[qi]!==undefined)return;
+  const oi=+btn.dataset.o,correct=QUIZ[qi].a;
+  answered[qi]=oi;
+  const qEl=$('.q[data-q="'+qi+'"]');
+  qEl.querySelectorAll('.q-opt').forEach(b=>{
+    b.disabled=true;
+    const j=+b.dataset.o;
+    if(j===correct)b.classList.add('correct');
+    if(j===oi&&oi!==correct)b.classList.add('wrong');
+  });
+  $('.q-exp[data-exp="'+qi+'"]').classList.add('show');
+  $('#qAnswered').textContent=Object.keys(answered).length;
+  if(Object.keys(answered).length===QUIZ.length)finishQuiz();
+});
+function finishQuiz(){
+  let right=0;QUIZ.forEach((item,i)=>{if(answered[i]===item.a)right++});
+  const pct=Math.round(right/QUIZ.length*100);
+  $('#qScore').textContent=pct+'%';
+  $('#qScoreLbl').textContent=right+' of '+QUIZ.length+' correct';
+  const pass=pct>=80;
+  $('#qVerdict').textContent=pass?'Certified-ready':'Almost there';
+  $('#qVerdictMsg').textContent=pass
+    ? 'You can read any plan on the shelf and guide a patient honestly. Keep the glossary handy at the front desk.'
+    : 'Review Lessons 3 and 5 — waiting periods and plan matching are where most points are lost — then retake.';
+  if(state.quiz.best==null||pct>state.quiz.best){state.quiz.best=pct;save(state)}
+  $('#qBest').textContent=state.quiz.best+'%';
+  $('#quizResult').classList.add('show');
+  safeScroll($('#quizResult'),{behavior:'smooth',block:'center'});
+}
+$('#qRetry').addEventListener('click',()=>{
+  for(const k in answered)delete answered[k];
+  $('#qAnswered').textContent='0';
+  $('#quizResult').classList.remove('show');
+  renderQuiz();wireTipSpans();
+  safeScroll($('#quiz'),{behavior:'smooth'});
+});
+
+/* ---------- reset ---------- */
+$('#resetBtn').addEventListener('click',()=>{
+  if(!confirm('Reset all training progress and quiz score?'))return;
+  localStorage.removeItem(KEY);
+  state={lessons:{},quiz:{best:null}};
+  for(const k in answered)delete answered[k];
+  $('#qAnswered').textContent='0';
+  $('#quizResult').classList.remove('show');
+  renderQuiz();syncProgress();wireTipSpans();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- init ---------- */
+renderPlans('all');
+renderGlossary();
+renderQuiz();
+syncProgress();
+wireTipSpans();
+onScroll();
+</script>
+</body>
+</html>
